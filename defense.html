@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com; img-src 'self' data:;" />
+  <title>Project Defense Simulator | ProjectDefense</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen selection:bg-blue-600 selection:text-white">
+
+  <a href="#main-defense-workstation" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Main Workstation -->
+  <main id="main-defense-workstation" class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    
+    <!-- Top Progress Steps Indicator -->
+    <nav aria-label="Defense Progress" class="border-b border-[#1F2937] pb-6">
+      <div class="flex items-center justify-between max-w-2xl mx-auto text-xs font-mono">
+        
+        <!-- Step 1 Indicator -->
+        <div id="step-ind-1" class="flex items-center gap-2 text-blue-400 font-bold">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
+          <span>Import Code</span>
+        </div>
+        <div class="h-0.5 w-8 sm:w-16 bg-[#1F2937]"></div>
+
+        <!-- Step 2 Indicator -->
+        <div id="step-ind-2" class="flex items-center gap-2 text-slate-500">
+          <span class="w-6 h-6 rounded-full bg-[#111827] border border-[#1F2937] text-slate-400 flex items-center justify-center text-xs">2</span>
+          <span>Interviewer Mode</span>
+        </div>
+        <div class="h-0.5 w-8 sm:w-16 bg-[#1F2937]"></div>
+
+        <!-- Step 3 Indicator -->
+        <div id="step-ind-3" class="flex items-center gap-2 text-slate-500">
+          <span class="w-6 h-6 rounded-full bg-[#111827] border border-[#1F2937] text-slate-400 flex items-center justify-center text-xs">3</span>
+          <span>Defend (Questions)</span>
+        </div>
+        <div class="h-0.5 w-8 sm:w-16 bg-[#1F2937]"></div>
+
+        <!-- Step 4 Indicator -->
+        <div id="step-ind-4" class="flex items-center gap-2 text-slate-500">
+          <span class="w-6 h-6 rounded-full bg-[#111827] border border-[#1F2937] text-slate-400 flex items-center justify-center text-xs">4</span>
+          <span>Rubric Results</span>
+        </div>
+
+      </div>
+    </nav>
+
+    <!-- Global Mode Badge Header -->
+    <div class="flex items-center justify-between text-xs">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Project Defense Simulator</h1>
+        <p class="text-slate-400 text-xs mt-0.5">Test whether you can defend your technical decisions line-by-line.</p>
+      </div>
+
+      <!-- Live / Mock Badge -->
+      <div id="engine-status-badge" class="px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[#111827] border border-[#1F2937] text-slate-300 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span id="engine-status-text">Mock Mode</span>
+      </div>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- STEP 1: IMPORT GITHUB REPOSITORY / SAMPLE -->
+    <!-- ========================================================================= -->
+    <section id="step-1-panel" class="bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="Step 1: Import Code">
+      
+      <div class="border-b border-[#1F2937] pb-4">
+        <h2 class="text-base font-semibold text-white">Step 1: Select a Public Code File to Defend</h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Paste the URL of any public GitHub repository. We will load the repository file tree so you can pick one file to defend.
+        </p>
+      </div>
+
+      <!-- Mandatory Security Warning -->
+      <div class="p-3.5 rounded-lg bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs space-y-1">
+        <div class="font-semibold text-amber-300 flex items-center gap-1.5">
+          <span>⚠️ Mandatory Privacy Notice:</span>
+        </div>
+        <p class="text-[11px] text-amber-200/90 leading-relaxed">
+          Only use public code. Do not upload or paste confidential, company, or proprietary code.
+        </p>
+      </div>
+
+      <!-- GitHub Repo Input Form -->
+      <div class="space-y-3">
+        <label for="github-repo-url" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+          Public GitHub Repository URL
+        </label>
+        
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <input 
+            type="url" 
+            id="github-repo-url" 
+            placeholder="https://github.com/facebook/react or https://github.com/owner/project" 
+            class="flex-1 bg-[#0B0F17] border border-[#1F2937] rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth font-mono"
+          />
+          <button 
+            type="button" 
+            id="load-repo-btn" 
+            class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth whitespace-nowrap shadow-sm disabled:opacity-50"
+          >
+            Load repo
+          </button>
+        </div>
+
+        <!-- Inline Error Container -->
+        <p id="github-url-error" class="hidden text-xs text-red-400 font-medium" aria-live="polite"></p>
+
+        <!-- Rate Limit & Extension Hint -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-500 pt-1 gap-1">
+          <span>Supported: .js, .dart, .html, .py, .java, .ts, .css (Max 50KB)</span>
+          <span>Unauthenticated GitHub API: ~60 requests/hour</span>
+        </div>
+      </div>
+
+      <!-- Quick Offline Test Shortcut -->
+      <div class="pt-2 border-t border-[#1F2937] flex items-center justify-between text-xs">
+        <span class="text-slate-400">Testing offline or hitting rate limits?</span>
+        <button type="button" id="load-sample-btn" class="text-blue-400 hover:text-blue-300 underline font-medium">
+          Load Sample Checkout Code
+        </button>
+      </div>
+
+      <!-- File Picker (Visible once tree loads) -->
+      <div id="file-picker-container" class="hidden border-t border-[#1F2937] pt-5 space-y-4">
+        <div>
+          <label for="repo-file-select" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            Select a Code File (<span id="eligible-files-count">0</span> eligible files found):
+          </label>
+          <select 
+            id="repo-file-select" 
+            class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none transition-smooth font-mono"
+          >
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
+
+        <!-- File Inspection Status & Snippet -->
+        <div id="file-preview-card" class="hidden p-4 rounded-lg bg-[#0B0F17] border border-[#1F2937] space-y-2">
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span id="preview-filename" class="text-blue-400 font-semibold truncate"></span>
+            <span id="preview-filesize" class="text-slate-400 shrink-0"></span>
+          </div>
+          <pre id="code-snippet-preview" class="text-[11px] font-mono text-slate-300 max-h-36 overflow-y-auto whitespace-pre-wrap bg-[#111827]/60 p-3 rounded border border-[#1F2937]"></pre>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button 
+            type="button" 
+            id="proceed-to-mode-btn" 
+            class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm"
+          >
+            Continue to Interviewer Mode &rarr;
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- STEP 2: CHOOSE INTERVIEWER MODE -->
+    <!-- ========================================================================= -->
+    <section id="step-2-panel" class="hidden bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="Step 2: Choose Mode">
+      
+      <div class="border-b border-[#1F2937] pb-4">
+        <h2 class="text-base font-semibold text-white">Step 2: Choose Your Interviewer Persona</h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Select the intensity of the oral exam. Each mode challenges your code from a different perspective.
+        </p>
+      </div>
+
+      <!-- Mode Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" role="radiogroup" aria-label="Interviewer Mode">
+        
+        <!-- Mode 1: Gentle College Examiner -->
+        <label class="mode-card flex flex-col justify-between p-4 rounded-xl border border-[#1F2937] bg-[#0B0F17]/50 hover:border-slate-600 cursor-pointer transition-smooth">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-emerald-400">Level 1</span>
+              <input type="radio" name="interviewer-mode" value="gentle" class="text-blue-600 focus:ring-0">
+            </div>
+            <h3 class="text-sm font-bold text-white">Gentle College Examiner</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Basic conceptual definitions, friendly tone, and standard college viva format without intimidation.
+            </p>
+          </div>
+          <span class="text-[10px] text-emerald-400/80 font-mono mt-4 block">Recommended for 2nd Year</span>
+        </label>
+
+        <!-- Mode 2: Standard HR + Technical (Default) -->
+        <label class="mode-card flex flex-col justify-between p-4 rounded-xl border-2 border-blue-500 bg-blue-950/20 cursor-pointer transition-smooth">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-blue-400">Level 2</span>
+              <input type="radio" name="interviewer-mode" value="standard" checked class="text-blue-600 focus:ring-0">
+            </div>
+            <h3 class="text-sm font-bold text-white">Standard HR + Technical</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Industry best practices, code maintainability, input edge cases, and standard error handling.
+            </p>
+          </div>
+          <span class="text-[10px] text-blue-400/80 font-mono mt-4 block">Recommended for Campus Drives</span>
+        </label>
+
+        <!-- Mode 3: Brutal Startup CTO -->
+        <label class="mode-card flex flex-col justify-between p-4 rounded-xl border border-[#1F2937] bg-[#0B0F17]/50 hover:border-slate-600 cursor-pointer transition-smooth">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-red-400">Level 3</span>
+              <input type="radio" name="interviewer-mode" value="brutal" class="text-blue-600 focus:ring-0">
+            </div>
+            <h3 class="text-sm font-bold text-white">Brutal Startup CTO</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              High-pressure grilling targeting potential AI boilerplate, race conditions, memory leaks, and architectural scale.
+            </p>
+          </div>
+          <span class="text-[10px] text-red-400/80 font-mono mt-4 block">High Stakes / Tier-1 Roles</span>
+        </label>
+
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="flex items-center justify-between pt-4 border-t border-[#1F2937]">
+        <button type="button" id="back-to-step-1-btn" class="text-xs text-slate-400 hover:text-white transition-smooth">
+          &larr; Back to File Selection
+        </button>
+        <button 
+          type="button" 
+          id="generate-questions-btn" 
+          class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm"
+        >
+          Generate Questions &rarr;
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- STEP 3: QUESTIONS & ANSWER WORKBENCH -->
+    <!-- ========================================================================= -->
+    <section id="step-3-panel" class="hidden bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="Step 3: Defend Your Code">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1F2937] pb-4">
+        <div>
+          <h2 class="text-base font-semibold text-white">Step 3: Answer the Interview Questions</h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Explain the technical rationale behind your code. Minimum 20 characters per answer.
+          </p>
+        </div>
+        <div class="text-xs font-mono text-slate-400">
+          File: <span id="active-file-display" class="text-blue-400 font-semibold"></span>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="questions-loading" class="text-center py-12 space-y-3">
+        <div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p class="text-xs font-mono text-slate-400">Analyzing code structure & formulating questions...</p>
+      </div>
+
+      <!-- Question Cards Container -->
+      <div id="questions-list-container" class="space-y-6 hidden">
+        <!-- Rendered dynamically by defense.js -->
+      </div>
+
+      <!-- Global Validation Notice -->
+      <p id="submission-error" class="hidden text-xs text-red-400 font-medium" aria-live="polite"></p>
+
+      <!-- Submit Answers Control -->
+      <div class="flex items-center justify-between pt-4 border-t border-[#1F2937]">
+        <button type="button" id="back-to-step-2-btn" class="text-xs text-slate-400 hover:text-white transition-smooth">
+          &larr; Change Mode
+        </button>
+        <button 
+          type="button" 
+          id="submit-answers-btn" 
+          class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm"
+        >
+          Submit Answers &amp; Get Evaluation
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- STEP 4: RUBRIC RESULTS & STUDY CONCEPTS -->
+    <!-- ========================================================================= -->
+    <section id="step-4-panel" class="hidden bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="Step 4: Rubric Results">
+      
+      <div class="border-b border-[#1F2937] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base font-semibold text-white">Step 4: Oral Defense Evaluation</h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Rubric-based assessment across Clarity, Technical Accuracy, and Depth.
+          </p>
+        </div>
+        
+        <!-- Overall Score Metric -->
+        <div class="bg-[#0B0F17] border border-[#1F2937] px-4 py-2.5 rounded-lg text-right">
+          <span class="text-[10px] font-mono uppercase text-slate-500 block">Overall Score</span>
+          <span id="overall-score-display" class="text-lg font-bold font-mono text-blue-400">0 / 45</span>
+        </div>
+      </div>
+
+      <!-- Results List Container -->
+      <div id="results-list-container" class="space-y-5">
+        <!-- Rendered dynamically by defense.js -->
+      </div>
+
+      <!-- Concepts to Study Section -->
+      <div class="p-5 rounded-xl bg-[#0B0F17] border border-[#1F2937] space-y-3">
+        <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+          <span>📚 Recommended Concepts to Study Before Your Next Interview:</span>
+        </h3>
+        <ul id="study-concepts-list" class="space-y-1.5 text-xs text-slate-300 list-disc list-inside">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+
+      <!-- Restart / Return Controls -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#1F2937]">
+        <button 
+          type="button" 
+          id="restart-defense-btn" 
+          class="w-full sm:w-auto px-5 py-2.5 rounded-lg border border-[#1F2937] bg-[#0B0F17] hover:bg-[#1f2937] text-slate-300 text-xs font-medium transition-smooth"
+        >
+          Practice Another File
+        </button>
+
+        <a 
+          href="dashboard.html" 
+          class="w-full sm:w-auto text-center px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-smooth shadow-sm"
+        >
+          Return to Dashboard &rarr;
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/defense.js"></script>
+</body>
+</html>

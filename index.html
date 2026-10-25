@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Content Security Policy: Tailwind CDN + Self + GitHub API -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com; img-src 'self' data:;" />
+  <title>ProjectDefense | Can you defend the code you built?</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
+
+  <a href="#main-landing-content" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Hero Section -->
+  <main id="main-landing-content" class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-14 sm:py-20 flex flex-col items-center text-center space-y-12">
+    
+    <div class="space-y-6 max-w-3xl">
+      <!-- Honest Tagline -->
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono bg-[#111827] border border-[#1F2937] text-slate-300">
+        Built for 2nd–4th Year B.Tech CSE &amp; IT Students
+      </div>
+
+      <!-- H1 Headline -->
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+        Can you defend the code you built?
+      </h1>
+
+      <!-- Subtext -->
+      <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        ProjectDefense helps B.Tech students turn their projects into interview-ready stories and practice explaining their code under pressure.
+      </p>
+
+      <!-- Call to Action Buttons -->
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-4">
+        <a 
+          href="onboarding.html" 
+          class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm transition-smooth shadow-sm"
+        >
+          Set up your profile
+        </a>
+        <a 
+          href="dashboard.html" 
+          class="px-6 py-3 rounded-lg border border-[#1F2937] bg-[#111827] hover:bg-[#1f2937] text-slate-300 hover:text-white font-medium text-sm transition-smooth"
+        >
+          View dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Feature Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-5 w-full text-left" aria-label="Key Practice Modules">
+      
+      <!-- Feature 1: Project Defense -->
+      <a href="defense.html" class="block p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-blue-500/50 space-y-2.5 transition-smooth group">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white group-hover:text-blue-400 transition-smooth">Project Defense</h2>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Available now
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Practice explaining your own code line-by-line against 3 interviewer personas. Works offline or with live AI.
+        </p>
+      </a>
+
+      <!-- Feature 2: No-AI Coding Practice -->
+      <a href="coding.html" class="block p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-blue-500/50 space-y-2.5 transition-smooth group">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white group-hover:text-blue-400 transition-smooth">No-AI Coding Practice</h2>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Available now
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          30 campus recruitment problems in a bare-bones editor with hidden test cases and timed countdown.
+        </p>
+      </a>
+
+      <!-- Feature 3: Readiness Checklist -->
+      <a href="dashboard.html" class="block p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-blue-500/50 space-y-2.5 transition-smooth group">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white group-hover:text-blue-400 transition-smooth">Readiness Checklist</h2>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Available now
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          7-item self-assessed preparation checklist and progress score that survives browser refreshes.
+        </p>
+      </a>
+
+      <!-- Feature 4: Resume Bullet Improver -->
+      <a href="resume.html" class="block p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-blue-500/50 space-y-2.5 transition-smooth group">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white group-hover:text-blue-400 transition-smooth">Resume Bullet Improver</h2>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Available now
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Flags weak filler starts and missing metrics without ever fabricating numbers. Includes draft saving.
+        </p>
+      </a>
+
+      <!-- Feature 5: 30-Day Sprint -->
+      <a href="sprint.html" class="block p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-blue-500/50 space-y-2.5 transition-smooth group">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white group-hover:text-blue-400 transition-smooth">30-Day Placement Sprint</h2>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Available now
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Structured 30-day checklist covering the 25 core algorithm patterns, 10 SQL queries, and weak-topic alerts.
+        </p>
+      </a>
+
+      <!-- Feature 6: Pilot Feedback -->
+      <a href="feedback.html" class="block p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-blue-500/50 space-y-2.5 transition-smooth group">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white group-hover:text-blue-400 transition-smooth">Student Pilot Kit</h2>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            Feedback
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Share your experience and download a lightweight feedback file to help us improve the platform.
+        </p>
+      </a>
+
+    </section>
+
+    <!-- Privacy & Data Transparency Note (Phase 4 Requirement) -->
+    <section class="max-w-4xl w-full p-5 rounded-xl bg-[#111827] border border-[#1F2937] text-left text-xs text-slate-400 space-y-2" aria-label="Privacy Information">
+      <h3 class="text-white font-semibold text-xs flex items-center gap-1.5 uppercase font-mono tracking-wider">
+        <span>🔒 Privacy &amp; Data Transparency:</span>
+      </h3>
+      <div class="space-y-1.5 leading-relaxed text-[11px]">
+        <p><b class="text-slate-300">What is stored:</b> All student profile info, checklist checkboxes, resume drafts, sprint tasks, and coding attempts are stored strictly in <code class="text-blue-400 font-mono">localStorage</code> on your device only.</p>
+        <p><b class="text-slate-300">What is transmitted:</b> When you load a repository in Project Defense, code is fetched directly from the public GitHub REST API. If Live AI mode is configured, only the selected code file is processed for questions. Nothing is stored on our servers.</p>
+        <p><b class="text-slate-300">No account required:</b> We do not collect passwords, email addresses, or track your identity across sessions.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Honest Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee. Mock feedback is not a real evaluation.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+</body>
+</html>

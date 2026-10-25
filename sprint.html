@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;" />
+  <title>30-Day Placement Sprint | ProjectDefense</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
+
+  <a href="#main-sprint-content" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Main Content -->
+  <main id="main-sprint-content" class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10 space-y-8">
+    
+    <!-- Top Sprint Header with Streak & Progress -->
+    <header class="bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="space-y-2">
+        <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">
+          Structured 30-Day Plan &bull; 25 Algorithms &bull; 10 SQL Queries &bull; 5 System Design Concepts
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">30-Day Placement Sprint Track</h1>
+        <p class="text-xs sm:text-sm text-slate-400">
+          Track daily tasks covering high-frequency algorithmic patterns, SQL queries, and project review exercises.
+        </p>
+      </div>
+
+      <!-- Streak & Progress Box -->
+      <div class="bg-[#0B0F17] border border-[#1F2937] p-4 rounded-xl min-w-[240px] space-y-2">
+        <div class="flex items-center justify-between text-xs font-mono">
+          <span class="text-slate-400">Active Streak:</span>
+          <span id="sprint-streak-val" class="font-bold text-amber-400">0 Day(s)</span>
+        </div>
+        <div class="w-full h-2 bg-[#111827] rounded-full overflow-hidden border border-[#1F2937]">
+          <div id="sprint-progress-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <div id="sprint-progress-text" class="text-[11px] font-mono text-slate-500 text-right">0 / 90 tasks completed (0%)</div>
+      </div>
+    </header>
+
+    <!-- Weak-Topic Alert (Populated if <50% pass rate in attempts) -->
+    <div id="weak-topic-alert-container" class="hidden"></div>
+
+    <!-- 30-Day Grid Section -->
+    <section class="space-y-4" aria-label="30-Day Sprint Schedule">
+      <div class="flex items-center justify-between border-b border-[#1F2937] pb-3">
+        <h2 class="text-base font-semibold text-white">Daily Tasks (Days 1 to 30)</h2>
+        <span class="text-xs font-mono text-slate-500">Checkboxes persist in local storage</span>
+      </div>
+
+      <div id="sprint-days-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Populated by sprint.js -->
+      </div>
+    </section>
+
+    <!-- 10 SQL Practice Queries Section -->
+    <section class="bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="SQL Self-Check Practice">
+      <div class="border-b border-[#1F2937] pb-4">
+        <h2 class="text-lg font-bold text-white">10 Essential Campus SQL Queries (Self-Check Practice)</h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Type the SQL query and check against standard patterns. Note: Self-check uses normalized text matching; spacing and capitalization variations are supported.
+        </p>
+      </div>
+
+      <div id="sql-practice-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Populated by sprint.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/sprint.js"></script>
+</body>
+</html>

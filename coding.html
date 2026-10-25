@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Content Security Policy: Tailwind CDN + Web Worker Blob + GitHub API -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com; img-src 'self' data:;" />
+  <title>No-AI Coding Practice | ProjectDefense</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
+
+  <!-- Accessible Skip to Content Link -->
+  <a href="#main-coding-workbench" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Main Workstation -->
+  <main id="main-coding-workbench" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
+    
+    <!-- Header with Timer and Language controls -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1F2937] pb-5">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight">No-AI Coding Practice</h1>
+        <p class="text-xs text-slate-400 mt-0.5">30 campus-frequency problems without autocompletion or copilot assistance.</p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Language Selector -->
+        <div class="flex items-center gap-1.5 text-xs">
+          <label for="language-select" class="text-slate-400 font-mono">Language:</label>
+          <select id="language-select" class="bg-[#111827] border border-[#1F2937] text-white rounded px-2.5 py-1 text-xs focus:outline-none font-mono">
+            <option value="javascript">JavaScript (In-browser Worker)</option>
+            <option value="python">Python (Coming later)</option>
+            <option value="java">Java (Coming later)</option>
+            <option value="cpp">C++ (Coming later)</option>
+          </select>
+        </div>
+
+        <!-- Timer Controls -->
+        <div class="flex items-center gap-2 bg-[#111827] border border-[#1F2937] px-3 py-1 rounded-lg text-xs">
+          <span class="text-slate-400 font-mono">Timer:</span>
+          <select id="timer-duration-select" class="bg-[#0B0F17] border border-[#1F2937] text-white rounded px-1.5 py-0.5 text-xs font-mono">
+            <option value="15">15 min</option>
+            <option value="20">20 min</option>
+            <option value="30">30 min</option>
+          </select>
+          <span id="timer-display" class="font-mono text-base font-bold text-white ml-1">15:00</span>
+          <button type="button" id="timer-toggle-btn" class="px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-medium text-[11px] transition-smooth">
+            Start
+          </button>
+          <button type="button" id="timer-reset-btn" class="text-slate-400 hover:text-white text-[11px]">
+            Reset
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Language notice (for non-JS) -->
+    <div id="lang-notice" class="hidden p-3 rounded-lg bg-amber-950/20 border border-amber-500/30 text-amber-300 text-xs font-medium">
+      This language needs a server-side runner, coming later. Use JavaScript for now.
+    </div>
+
+    <!-- 2 Column Workbench: Problem Drawer (4 cols) & Editor/Console (8 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left: Problem Navigator (4 cols) -->
+      <section class="lg:col-span-4 bg-[#111827] border border-[#1F2937] rounded-xl p-4 sm:p-5 space-y-4" aria-label="Problems List">
+        <div class="flex items-center justify-between border-b border-[#1F2937] pb-3">
+          <h2 class="text-sm font-semibold text-white">Problem Bank</h2>
+          <span id="problems-count-badge" class="text-[10px] font-mono text-slate-500">30 problems</span>
+        </div>
+
+        <!-- Filter Dropdowns -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <label for="filter-topic" class="sr-only">Filter Topic</label>
+            <select id="filter-topic" class="w-full bg-[#0B0F17] border border-[#1F2937] text-white rounded px-2 py-1 text-[11px]">
+              <option value="all">All Topics</option>
+              <option value="Arrays and Strings">Arrays &amp; Strings (12)</option>
+              <option value="Recursion and Backtracking">Recursion (6)</option>
+              <option value="Stacks and Queues">Stacks &amp; Queues (4)</option>
+              <option value="Math and Bit Manipulation">Math &amp; Bits (4)</option>
+              <option value="SQL in JS">SQL in JS (4)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-difficulty" class="sr-only">Filter Difficulty</label>
+            <select id="filter-difficulty" class="w-full bg-[#0B0F17] border border-[#1F2937] text-white rounded px-2 py-1 text-[11px]">
+              <option value="all">All Levels</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Scrollable Problem Items -->
+        <div id="problems-list" class="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+          <!-- Populated by coding.js -->
+        </div>
+      </section>
+
+      <!-- Right: Problem Description & Code Editor (8 cols) -->
+      <section class="lg:col-span-8 space-y-5" aria-label="Code Editor and Test Runner">
+        
+        <!-- Active Problem Statement Box -->
+        <div class="bg-[#111827] border border-[#1F2937] rounded-xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 id="problem-title" class="text-base font-bold text-white"></h2>
+            <span id="problem-difficulty" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold"></span>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs">
+            <span id="problem-topic" class="text-blue-400 font-mono text-[11px]"></span>
+            <div id="problem-concepts" class="flex flex-wrap gap-1"></div>
+          </div>
+
+          <p id="problem-statement" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+
+          <!-- Visible Test Case Examples -->
+          <div class="space-y-1.5 pt-2">
+            <span class="text-[10px] uppercase font-mono text-slate-500 font-semibold block">Visible Examples:</span>
+            <div id="visible-tests-display" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Editor Toolbar -->
+        <div class="bg-[#111827] border border-[#1F2937] rounded-xl overflow-hidden flex flex-col">
+          <div class="bg-[#0B0F17] border-b border-[#1F2937] px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2 font-mono text-slate-400 text-[11px]">
+              <span>JavaScript Solution</span>
+              <span class="text-slate-600">&bull;</span>
+              <span>Web Worker Isolation</span>
+            </div>
+
+            <!-- Strict Mode Toggle -->
+            <label class="flex items-center gap-2 cursor-pointer select-none text-[11px] text-slate-400 hover:text-white">
+              <input type="checkbox" id="strict-mode-toggle" class="rounded bg-[#111827] border-[#1F2937] text-blue-600 focus:ring-0" />
+              <span>Strict Mode (Blocks Paste)</span>
+            </label>
+          </div>
+
+          <!-- Bare-Bones Plain Textarea (Zero Autocomplete) -->
+          <div class="p-3 bg-[#06090F]">
+            <label for="code-editor" class="sr-only">Code Editor</label>
+            <textarea 
+              id="code-editor" 
+              rows="12"
+              maxlength="20000"
+              spellcheck="false"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              class="w-full bg-transparent text-slate-200 font-mono text-xs leading-relaxed focus:outline-none resize-y"
+              placeholder="// Write your solution in plain JavaScript..."
+            ></textarea>
+          </div>
+
+          <!-- Execution Controls -->
+          <div class="bg-[#0B0F17] border-t border-[#1F2937] p-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="text-[11px] font-mono text-slate-500">
+              Timeout: 2s per test &bull; Code auto-saved
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button 
+                type="button" 
+                id="run-visible-btn" 
+                class="px-4 py-1.5 rounded-lg border border-[#1F2937] bg-[#111827] hover:bg-[#1f2937] text-slate-300 text-xs font-medium transition-smooth"
+              >
+                Run visible tests
+              </button>
+              <button 
+                type="button" 
+                id="submit-code-btn" 
+                class="px-5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-smooth shadow-sm"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Execution Results Console -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+            <span>Execution Output</span>
+            <span class="text-[10px] text-slate-500">Hidden tests never show inputs</span>
+          </div>
+          <div id="execution-output" class="p-3 rounded-lg bg-[#0B0F17] border border-[#1F2937] text-xs font-mono text-slate-400 whitespace-pre-wrap" aria-live="polite">
+Ready to test. Run visible tests or Submit to test hidden cases.
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/coding.js"></script>
+</body>
+</html>

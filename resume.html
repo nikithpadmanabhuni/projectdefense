@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;" />
+  <title>Resume Bullet Improver | ProjectDefense</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
+
+  <a href="#main-resume-content" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Main Content -->
+  <main id="main-resume-content" class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-10 space-y-8">
+    
+    <header class="border-b border-[#1F2937] pb-5 space-y-2">
+      <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">
+        Offline Rule-Based Checker &bull; Zero Invented Numbers
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Resume Bullet Improver</h1>
+      <p class="text-xs sm:text-sm text-slate-400">
+        Turn passive tutorial descriptions into active, verifiable engineering statements without fabricated metrics.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left: Input & Analysis (7 cols) -->
+      <section class="lg:col-span-7 bg-[#111827] border border-[#1F2937] rounded-xl p-6 space-y-5" aria-label="Bullet Checker Form">
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="bullet-input" class="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              Paste One Resume Bullet Point:
+            </label>
+            <span id="bullet-char-counter" class="text-[11px] font-mono text-slate-500">0 characters</span>
+          </div>
+
+          <textarea 
+            id="bullet-input" 
+            rows="3" 
+            maxlength="400"
+            placeholder="e.g. Worked on an e-commerce website using Flutter and Firebase. Learned basics of state management and added user login." 
+            class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg p-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth"
+          ></textarea>
+
+          <p class="text-[11px] text-slate-500 mt-1">
+            Note: Use only facts you can genuinely explain in a live interview.
+          </p>
+        </div>
+
+        <button 
+          type="button" 
+          id="check-bullet-btn" 
+          class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm"
+        >
+          Check bullet
+        </button>
+
+        <!-- Analysis Results Box -->
+        <div id="analysis-results-panel" class="hidden border-t border-[#1F2937] pt-5 space-y-5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-white">Rule Check Results</h2>
+            <span id="analysis-status-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold"></span>
+          </div>
+
+          <!-- Detected Issues List -->
+          <div id="issues-list" class="space-y-2"></div>
+
+          <!-- Rewriter Template Section -->
+          <div class="space-y-3 pt-2 border-t border-[#1F2937]">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">
+              1. Choose a Strong Lead Action Verb:
+            </span>
+            <div id="action-verbs-container" class="flex flex-wrap gap-1.5"></div>
+
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-300 block pt-2">
+              2. Recommended Pattern Outline:
+            </span>
+            <div id="rewrite-template-display" class="p-3 rounded-lg bg-[#0B0F17] border border-[#1F2937] text-xs font-mono text-blue-300 leading-relaxed whitespace-pre-wrap"></div>
+
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-300 block pt-2">
+              3. Customize Your Final Bullet (Fill In Real Facts):
+            </span>
+            <textarea 
+              id="customized-bullet-input" 
+              rows="3" 
+              class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg p-3 text-xs sm:text-sm text-white focus:outline-none transition-smooth font-mono"
+            ></textarea>
+
+            <!-- Mandatory Confirmation Checkbox -->
+            <label class="flex items-start gap-2.5 p-3 rounded-lg bg-[#0B0F17] border border-[#1F2937] cursor-pointer select-none">
+              <input type="checkbox" id="confirm-truth-checkbox" class="mt-0.5 rounded bg-[#111827] border-[#1F2937] text-blue-600 focus:ring-0" />
+              <span class="text-xs text-slate-300 font-medium">
+                I confirm every claim and number in this bullet is true and verifiable.
+              </span>
+            </label>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-between pt-1">
+              <button 
+                type="button" 
+                id="copy-final-btn" 
+                class="px-4 py-2 rounded-lg border border-[#1F2937] bg-[#0B0F17] hover:bg-[#1f2937] text-slate-300 text-xs font-medium transition-smooth"
+              >
+                Copy Bullet
+              </button>
+              <button 
+                type="button" 
+                id="save-draft-btn" 
+                class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-smooth shadow-sm"
+              >
+                Save Draft
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Saved Drafts (5 cols) -->
+      <section class="lg:col-span-5 bg-[#111827] border border-[#1F2937] rounded-xl p-5 space-y-4" aria-label="Saved Drafts">
+        <div class="flex items-center justify-between border-b border-[#1F2937] pb-3">
+          <h2 class="text-sm font-semibold text-white">Saved Drafts</h2>
+          <span id="drafts-count-badge" class="text-[10px] font-mono text-slate-500">0 / 10 drafts</span>
+        </div>
+
+        <div id="saved-drafts-list" class="space-y-3 max-h-[550px] overflow-y-auto">
+          <!-- Populated by resume.js -->
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/resume.js"></script>
+</body>
+</html>

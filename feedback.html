@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;" />
+  <title>Pilot Feedback | ProjectDefense</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
+
+  <a href="#main-feedback-content" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Main Content -->
+  <main id="main-feedback-content" class="flex-1 max-w-2xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14">
+    
+    <div class="bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6">
+      
+      <header class="border-b border-[#1F2937] pb-5 space-y-1">
+        <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">
+          Pilot Testing Feedback
+        </div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">Student Pilot Feedback</h1>
+        <p class="text-xs sm:text-sm text-slate-400">
+          Help us improve ProjectDefense. Your honest criticism helps us fix bugs before sharing with more classmates.
+        </p>
+      </header>
+
+      <!-- Feedback Form -->
+      <form id="feedback-form" class="space-y-6">
+        
+        <!-- Q1: Usefulness (1 to 5) -->
+        <div>
+          <label for="feedback-usefulness" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            1. How useful was Project Defense overall? (1 = Not useful, 5 = Extremely useful)
+          </label>
+          <select id="feedback-usefulness" required class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg p-2.5 text-xs sm:text-sm text-white focus:outline-none">
+            <option value="5">5 - Extremely useful (Challenged my project assumptions)</option>
+            <option value="4" selected>4 - Very useful</option>
+            <option value="3">3 - Moderately useful</option>
+            <option value="2">2 - Slightly useful</option>
+            <option value="1">1 - Not useful</option>
+          </select>
+        </div>
+
+        <!-- Q2: Realism (1 to 5) -->
+        <div>
+          <label for="feedback-realism" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            2. Were the interviewer questions realistic? (1 = Unrealistic, 5 = Very realistic)
+          </label>
+          <select id="feedback-realism" required class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg p-2.5 text-xs sm:text-sm text-white focus:outline-none">
+            <option value="5">5 - Very realistic (Felt like a real technical round)</option>
+            <option value="4" selected>4 - Realistic</option>
+            <option value="3">3 - Somewhat generic</option>
+            <option value="2">2 - Mostly irrelevant</option>
+            <option value="1">1 - Completely unrealistic</option>
+          </select>
+        </div>
+
+        <!-- Q3: What was confusing? (Text max 1000) -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="feedback-confusing" class="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              3. What felt confusing, slow, or broken?
+            </label>
+            <span id="feedback-char-count" class="text-[11px] font-mono text-slate-500">0 / 1000</span>
+          </div>
+          <textarea 
+            id="feedback-confusing" 
+            rows="4" 
+            maxlength="1000"
+            placeholder="Share any bugs, confusing wording, or suggestions..." 
+            class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg p-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth"
+          ></textarea>
+        </div>
+
+        <!-- Q4: Would you use this again? (Yes / No / Maybe) -->
+        <fieldset class="border-t border-[#1F2937] pt-4">
+          <legend class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            4. Would you use this again before your campus technical interview?
+          </legend>
+          <div class="flex items-center space-x-6 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="reuse" value="Yes" checked class="text-blue-600 focus:ring-0 bg-[#0B0F17] border-[#1F2937]" />
+              <span class="text-slate-300">Yes</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="reuse" value="Maybe" class="text-blue-600 focus:ring-0 bg-[#0B0F17] border-[#1F2937]" />
+              <span class="text-slate-300">Maybe</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="reuse" value="No" class="text-blue-600 focus:ring-0 bg-[#0B0F17] border-[#1F2937]" />
+              <span class="text-slate-300">No</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Submit & Download button -->
+        <div class="pt-4 border-t border-[#1F2937] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p class="text-[11px] text-slate-500">
+            Submitting downloads a small text response file to share with the developer.
+          </p>
+          <button 
+            type="submit" 
+            class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm"
+          >
+            Download Response
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Note for Future Google Form Integration:
+           // PLACEHOLDER: To connect to an online Google Form or Formspree endpoint, replace download handler with fetch('https://formspree.io/f/...')
+      -->
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const textarea = document.getElementById('feedback-confusing');
+      const counter = document.getElementById('feedback-char-count');
+      const form = document.getElementById('feedback-form');
+
+      if (textarea && counter) {
+        textarea.addEventListener('input', () => {
+          counter.textContent = `${textarea.value.length} / 1000`;
+        });
+      }
+
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const usefulness = document.getElementById('feedback-usefulness').value;
+          const realism = document.getElementById('feedback-realism').value;
+          const confusing = document.getElementById('feedback-confusing').value.trim();
+          const reuseChecked = document.querySelector('input[name="reuse"]:checked')?.value || 'Not specified';
+
+          const feedbackPayload = {
+            submittedAt: new Date().toISOString(),
+            usefulness: Number(usefulness),
+            realism: Number(realism),
+            confusingOrBroken: confusing || 'None reported',
+            wouldUseAgain: reuseChecked
+          };
+
+          // Generate downloadable JSON file
+          const blob = new Blob([JSON.stringify(feedbackPayload, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `projectdefense-feedback-${Date.now()}.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          alert('Thank you! Your feedback file has been downloaded. Please send it to the developer.');
+          form.reset();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

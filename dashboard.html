@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;" />
+  <title>Dashboard | ProjectDefense</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
+
+  <a href="#main-dashboard-content" class="sr-only focus:not-sr-only focus:p-2 focus:bg-blue-600 focus:text-white focus:absolute focus:top-2 focus:left-2 focus:z-50">Skip to content</a>
+
+  <!-- Shared Header Navigation -->
+  <div id="site-nav"></div>
+
+  <!-- Main Container -->
+  <main id="main-dashboard-content" class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14">
+
+    <!-- State 1: When No Profile Exists -->
+    <div id="no-profile-state" class="hidden text-center max-w-md mx-auto py-16 space-y-4">
+      <div class="w-12 h-12 rounded-full bg-[#111827] border border-[#1F2937] text-slate-400 mx-auto flex items-center justify-center font-mono text-lg font-bold">
+        ?
+      </div>
+      <h1 class="text-xl font-bold text-white">No Profile Found</h1>
+      <p class="text-sm text-slate-400">
+        You haven't set up your student profile yet. Create one to see your readiness checklist and practice tools.
+      </p>
+      <div class="pt-2">
+        <a 
+          href="onboarding.html" 
+          class="inline-block px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm transition-smooth"
+        >
+          Set up profile
+        </a>
+      </div>
+    </div>
+
+    <!-- State 2: When Profile Exists -->
+    <div id="has-profile-state" class="hidden space-y-8">
+      
+      <!-- Top Welcome Banner -->
+      <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1F2937] pb-6">
+        <div>
+          <h1 id="dash-welcome-text" class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Hi, here's your readiness snapshot.
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Review your credentials and track your interview preparedness below.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <a 
+            href="onboarding.html" 
+            class="px-3 py-1.5 rounded-md border border-[#1F2937] bg-[#111827] hover:bg-[#1f2937] text-slate-300 text-xs font-medium transition-smooth"
+          >
+            Edit profile
+          </a>
+          <button 
+            type="button" 
+            id="dash-clear-btn" 
+            class="px-3 py-1.5 rounded-md text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xs font-medium transition-smooth"
+          >
+            Clear profile
+          </button>
+          <button 
+            type="button" 
+            id="dash-reset-all-btn" 
+            class="px-3 py-1.5 rounded-md border border-red-500/30 text-red-400 hover:bg-red-950/30 text-xs font-medium transition-smooth"
+          >
+            Reset all my data
+          </button>
+        </div>
+      </header>
+
+      <!-- Practice Stats Summary Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+        <div class="p-3 rounded-lg bg-[#111827] border border-[#1F2937]">
+          <span class="text-slate-500 text-[10px] block uppercase">No-AI Coding</span>
+          <span id="dash-attempts-count" class="font-bold text-white text-sm">0 attempts</span>
+        </div>
+        <div class="p-3 rounded-lg bg-[#111827] border border-[#1F2937]">
+          <span class="text-slate-500 text-[10px] block uppercase">30-Day Sprint</span>
+          <span id="dash-sprint-count" class="font-bold text-blue-400 text-sm">0 tasks done</span>
+        </div>
+        <div class="p-3 rounded-lg bg-[#111827] border border-[#1F2937]">
+          <span class="text-slate-500 text-[10px] block uppercase">Resume Drafts</span>
+          <a href="resume.html" class="font-bold text-emerald-400 text-sm hover:underline">Open Checker &rarr;</a>
+        </div>
+        <div class="p-3 rounded-lg bg-[#111827] border border-[#1F2937]">
+          <span class="text-slate-500 text-[10px] block uppercase">Pilot Feedback</span>
+          <a href="feedback.html" class="font-bold text-amber-400 text-sm hover:underline">Share Feedback &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Action Card: Launch Project Defense -->
+      <div class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-blue-950/40 via-[#111827] to-[#111827] border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 uppercase">Interactive Practice</span>
+            <span class="text-xs text-slate-300 font-semibold">Project Defense Simulator</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Import a public GitHub repo or sample code and defend your architectural decisions against a simulated technical interviewer.
+          </p>
+        </div>
+        <a 
+          href="defense.html" 
+          class="shrink-0 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-smooth shadow-sm text-center"
+        >
+          Start Oral Exam &rarr;
+        </a>
+      </div>
+
+      <!-- Grid: Profile Card + Readiness Score Card -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left: Student Profile Card (5 cols) -->
+        <section class="md:col-span-5 bg-[#111827] border border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4" aria-label="Student Profile">
+          <div class="flex items-center justify-between border-b border-[#1F2937] pb-3">
+            <h2 class="text-sm font-semibold text-white uppercase tracking-wider">Student Profile</h2>
+            <span class="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Active</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Full Name</span>
+              <span id="val-name" class="text-white font-medium text-sm"></span>
+            </div>
+
+            <div>
+              <span class="text-slate-500 uppercase tracking-wider text-[10px] block">College</span>
+              <span id="val-college" class="text-slate-300"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#1F2937]">
+              <div>
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Branch</span>
+                <span id="val-branch" class="text-slate-300 font-medium"></span>
+              </div>
+              <div>
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Year</span>
+                <span id="val-year" class="text-slate-300 font-medium"></span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-[#1F2937]">
+              <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Target Role</span>
+              <span id="val-role" class="text-slate-200 font-medium"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#1F2937]">
+              <div>
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Projects</span>
+                <span id="val-projects" class="text-slate-300 font-mono"></span>
+              </div>
+              <div>
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Internship</span>
+                <span id="val-internship" class="text-slate-300"></span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-[#1F2937]">
+              <span class="text-slate-500 uppercase tracking-wider text-[10px] block">Main Language</span>
+              <span id="val-lang" class="text-blue-400 font-mono font-medium"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Readiness Score & Checklist (7 cols) -->
+        <section class="md:col-span-7 space-y-6" aria-label="Readiness Checklist">
+          
+          <!-- Score Summary Box -->
+          <div class="bg-[#111827] border border-[#1F2937] rounded-xl p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-semibold text-white">Readiness Score</h2>
+              <span id="readiness-score-text" class="text-xs font-mono font-bold text-white">0%</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full h-2.5 bg-[#0B0F17] rounded-full overflow-hidden border border-[#1F2937]" role="progressbar" aria-label="Readiness Progress">
+              <div id="readiness-progress-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Label -->
+            <p class="text-[11px] text-slate-500 italic">
+              Self-assessed practice score, not a hiring prediction.
+            </p>
+
+            <!-- Suggested Next Step -->
+            <div class="pt-2 border-t border-[#1F2937] text-xs">
+              <span class="text-slate-400 font-medium">Suggested Next Step: </span>
+              <span id="readiness-suggestion-text" class="text-amber-400 font-medium"></span>
+            </div>
+          </div>
+
+          <!-- Interactive Checklist -->
+          <div class="bg-[#111827] border border-[#1F2937] rounded-xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-[#1F2937] pb-3">
+              <h2 class="text-sm font-semibold text-white">Readiness Checklist</h2>
+              <span class="text-[11px] text-slate-400 font-mono">Persists on reload</span>
+            </div>
+
+            <div id="checklist-items" class="space-y-2">
+              <!-- Dynamically populated via dashboard.js -->
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#1F2937] py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>Practice tool, not a hiring guarantee.</p>
+    <p class="text-slate-600">Built by a B.Tech student.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
