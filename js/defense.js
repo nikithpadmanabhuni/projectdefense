@@ -10,6 +10,7 @@
 import { parseGitHubUrl, fetchRepoMetadata, fetchRepoFileTree, fetchFileContent } from './github.js';
 import { getInterviewQuestions, gradeStudentAnswer, checkLiveAiAvailability } from './api-client.js';
 import { saveDefenseResult } from './storage.js';
+import { checkAndIssueCertificate, renderCertificateUI } from './certificate.js';
 
 // Sample fallback code for zero-friction offline testing
 const SAMPLE_OFFLINE_CODE = `// Sample E-Commerce Checkout Service
@@ -546,10 +547,29 @@ function renderResultsStep4() {
     container.appendChild(card);
   });
 
-  // Overall Score
+  // Overall Score & Certificate Issuance
+  const pct = Math.round((cumulativeScore / maxPossible) * 100);
   if (overallScoreEl) {
-    const pct = Math.round((cumulativeScore / maxPossible) * 100);
     overallScoreEl.textContent = `${cumulativeScore} / ${maxPossible} (${pct}%)`;
+  }
+
+  // Automatic Certificate Generation for 50%+ Score
+  const awardContainer = document.getElementById('defense-certificate-award');
+  if (awardContainer) {
+    if (pct >= 50) {
+      const issueResult = checkAndIssueCertificate({
+        score: cumulativeScore,
+        maxScore: maxPossible,
+        type: 'Oral Project Defense',
+        projectOrFile: state.selectedFile ? state.selectedFile.path : 'Repository Source Code'
+      });
+      if (issueResult.issued) {
+        awardContainer.classList.remove('hidden');
+        renderCertificateUI(awardContainer, issueResult.cert);
+      }
+    } else {
+      awardContainer.classList.add('hidden');
+    }
   }
 
   // Recommended Study Concepts

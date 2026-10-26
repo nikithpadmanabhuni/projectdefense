@@ -12,6 +12,7 @@ const DEFENSE_STORAGE_KEY = 'projectdefense.defense.v1';
 const ATTEMPTS_STORAGE_KEY = 'projectdefense.attempts.v1';
 const SPRINT_STORAGE_KEY = 'projectdefense.sprint.v1';
 const RESUME_STORAGE_KEY = 'projectdefense.resume.v1';
+const CERTIFICATE_STORAGE_KEY = 'projectdefense.certificate.v1';
 const CODE_DRAFT_PREFIX = 'projectdefense.code.v1.';
 
 // In-memory storage dictionary for private/blocked mode
@@ -328,5 +329,28 @@ export function getResumeDrafts() {
   } catch (error) {
     console.error('Error parsing resume drafts:', error);
     return [];
+  }
+}
+
+// ==========================================
+// Verified Certificate Storage
+// ==========================================
+export function saveCertificate(cert) {
+  try {
+    getStorage().setItem(CERTIFICATE_STORAGE_KEY, JSON.stringify(cert));
+    return true;
+  } catch (error) {
+    console.error('Error saving certificate:', error);
+    return false;
+  }
+}
+
+export function getCertificate() {
+  try {
+    const raw = getStorage().getItem(CERTIFICATE_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    console.error('Error parsing certificate:', error);
+    return null;
   }
 }

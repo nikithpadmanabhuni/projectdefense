@@ -9,7 +9,7 @@
  * 4. Cleans up legacy caches on activation.
  */
 
-const CACHE_NAME = 'pd-cache-v5';
+const CACHE_NAME = 'pd-cache-v6';
 
 const STATIC_ASSETS = [
   './',
@@ -33,6 +33,7 @@ const STATIC_ASSETS = [
   './js/resume-rules.js',
   './js/resume.js',
   './js/sprint.js',
+  './js/certificate.js',
   './js/nav.js',
   './js/onboarding.js',
   './js/dashboard.js',

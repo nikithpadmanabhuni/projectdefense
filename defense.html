@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0B0F17" />
   <meta name="description" content="Simulate an oral capstone project defense against 3 interviewer personas with line-by-line questions on your own GitHub code." />
   <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data: blob:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
   <title>Project Defense Simulator | ProjectDefense</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
@@ -348,6 +348,9 @@
           <!-- Populated dynamically -->
         </ul>
       </div>
+
+      <!-- Defense Certificate Award Banner (Unlocked when >= 50%) -->
+      <div id="defense-certificate-award" class="hidden"></div>
 
       <!-- Restart / Return Controls -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#1F2937]">

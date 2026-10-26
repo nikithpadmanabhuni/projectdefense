@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0B0F17" />
   <meta name="description" content="View your engineering readiness checklist, interview practice metrics, and diagnostic status on ProjectDefense." />
   <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data: blob:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
   <title>Dashboard | ProjectDefense</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
@@ -221,6 +221,11 @@
         </section>
 
       </div>
+
+      <!-- Verified Defense Certificate (Automatically unlocked above 50%) -->
+      <section id="certificate-container" class="mt-6" aria-label="Verified Defense Certificate">
+        <!-- Rendered dynamically via js/certificate.js & js/dashboard.js -->
+      </section>
 
       <!-- Device & Capability Diagnostics (Phase 5 Step 1) -->
       <section class="bg-[#111827] border border-[#1F2937] rounded-xl overflow-hidden mt-6" aria-label="Device Compatibility and Diagnostics">

@@ -3,8 +3,9 @@
  * Renders the saved profile, readiness checklist, dynamic score, and next steps.
  */
 
-import { getProfile, clearProfile, clearAllData, getChecklist, saveChecklist, getAttempts, getSprintProgress } from './storage.js';
+import { getProfile, clearProfile, clearAllData, getChecklist, saveChecklist, getAttempts, getSprintProgress, getCertificate, getDefenseResult } from './storage.js';
 import { checkEnvironment, getDiagnosticSummary, copyToClipboard } from './env.js';
+import { checkAndIssueCertificate, renderCertificateUI } from './certificate.js';
 
 const CHECKLIST_ITEMS = [
   'Projects are deployed with a live link',
@@ -40,6 +41,7 @@ if (typeof document !== 'undefined') {
     renderProfileData(profile);
     renderPracticeStats();
     initChecklist();
+    updateCertificateDisplay(profile);
 
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
@@ -153,6 +155,7 @@ function handleChecklistChange() {
 
   saveChecklist(checkedIndices);
   updateScoreUI(checkedIndices.length, CHECKLIST_ITEMS.length);
+  updateCertificateDisplay(getProfile());
 }
 
 /**
@@ -279,4 +282,39 @@ function initDeviceCheck() {
       }
     });
   }
+}
+
+/**
+ * Checks certificate qualification and renders the certificate UI on the profile.
+ * Unlocks automatically if Defense Score >= 50% or Readiness Checklist >= 50%.
+ * @param {any} profile 
+ */
+function updateCertificateDisplay(profile) {
+  const container = document.getElementById('certificate-container');
+  if (!container) return;
+
+  const defense = getDefenseResult();
+  const savedChecklist = getChecklist();
+  const checklistScore = Math.round((savedChecklist.length / CHECKLIST_ITEMS.length) * 100);
+
+  if (defense && typeof defense.score === 'number' && defense.score >= 23) {
+    checkAndIssueCertificate({
+      score: defense.score,
+      maxScore: defense.maxScore || 45,
+      type: 'Oral Project Defense',
+      projectOrFile: defense.file || 'Capstone Engineering Project',
+      candidateName: profile?.fullName
+    });
+  } else if (checklistScore >= 50) {
+    checkAndIssueCertificate({
+      score: checklistScore,
+      maxScore: 100,
+      type: 'Engineering Readiness Clearance',
+      projectOrFile: `${profile?.targetRole || 'B.Tech'} Portfolio`,
+      candidateName: profile?.fullName
+    });
+  }
+
+  const cert = getCertificate();
+  renderCertificateUI(container, cert);
 }
