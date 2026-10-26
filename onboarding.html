@@ -9,8 +9,8 @@
   <meta name="copyright" content="Copyright © 2026 Nikith Padmanabhuni. All Rights Reserved." />
   <meta name="designer" content="Nikith Padmanabhuni" />
   <meta name="owner" content="Nikith Padmanabhuni" />
-  <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data: blob:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
+  <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API + Vercel Analytics -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://va.vercel-scripts.com; img-src 'self' data: blob:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
   <title>Profile Setup | ProjectDefense</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
@@ -24,6 +24,12 @@
   <link rel="stylesheet" href="css/custom.css" />
   <!-- Anti-Theft & IP Protection Engine -->
   <script src="js/security.js"></script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body class="bg-[#0B0F17] text-[#E5E7EB] flex flex-col min-h-screen">
 
