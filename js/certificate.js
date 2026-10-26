@@ -153,21 +153,13 @@ export function renderCertificateToCanvas(cert, canvas) {
   ctx.font = 'bold 20px "Courier New", Courier, monospace';
   ctx.fillText(`"${cert.projectOrFile}"`, width / 2, 455);
 
-  // 8. Verified Score Badge Box
-  const badgeWidth = 460;
-  const badgeHeight = 64;
-  const badgeX = (width - badgeWidth) / 2;
-  const badgeY = 495;
-
-  ctx.fillStyle = '#111827';
-  ctx.fillRect(badgeX, badgeY, badgeWidth, badgeHeight);
-  ctx.strokeStyle = '#10B981';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(badgeX, badgeY, badgeWidth, badgeHeight);
-
+  // 8. Verified Score & Clearance Status (Clean authentic typography without bounding box)
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#34D399';
-  ctx.font = 'bold 22px "Segoe UI", Roboto, sans-serif';
-  ctx.fillText(`DEFENSE SCORE: ${cert.score}% • VERIFIED CLEARANCE`, width / 2, badgeY + 40);
+  ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.letterSpacing = '1.5px';
+  ctx.fillText(`DEFENSE SCORE: ${cert.score}% • VERIFIED CLEARANCE`, width / 2, 530);
+  ctx.letterSpacing = '0px';
 
   // 9. Official Seal (Left)
   const sealX = 180;

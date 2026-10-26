@@ -9,7 +9,7 @@
  * 4. Cleans up legacy caches on activation.
  */
 
-const CACHE_NAME = 'pd-cache-v6';
+const CACHE_NAME = 'pd-cache-v7';
 
 const STATIC_ASSETS = [
   './',
