@@ -25,8 +25,8 @@
   <meta name="twitter:title" content="ProjectDefense | Can you defend the code you built?" />
   <meta name="twitter:description" content="B.Tech oral defense and viva simulator. Defend your code line-by-line against 3 interviewer personas." />
 
-  <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data: blob:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
+  <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API + Vercel Analytics -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://va.vercel-scripts.com; img-src 'self' data: blob:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
   <title>ProjectDefense | Can you defend the code you built?</title>
 
   <!-- PWA Manifest & Icons -->
@@ -41,6 +41,12 @@
   <link rel="stylesheet" href="css/custom.css" />
   <!-- Anti-Theft & IP Protection Engine -->
   <script src="js/security.js"></script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 
   <!-- Structured Data JSON-LD (SEO, AEO, GEO) -->
   <script type="application/ld+json">
