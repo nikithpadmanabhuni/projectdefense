@@ -85,31 +85,196 @@
 
 
     <!-- ========================================================================= -->
-    <!-- STEP 1: IMPORT GITHUB REPOSITORY / SAMPLE -->
+    <!-- STEP 1: IMPORT CODE (PASTE, UPLOAD, TEMPLATE, OR OPTIONAL GITHUB) -->
     <!-- ========================================================================= -->
-    <section id="step-1-panel" class="bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="Step 1: Import Code">
+    <section id="step-1-panel" class="bg-[#111827] border border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-6" aria-label="Step 1: Choose Code">
       
       <div class="border-b border-[#1F2937] pb-4">
-        <h2 class="text-base font-semibold text-white">Step 1: Select a Public Code File to Defend</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <h2 class="text-base font-semibold text-white">Step 1: Choose Your Project Code to Defend</h2>
+          <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">GitHub Optional</span>
+        </div>
         <p class="text-xs text-slate-400 mt-1">
-          Paste the URL of any public GitHub repository. We will load the repository file tree so you can pick one file to defend.
+          Paste your project code directly, upload a local file, select a pre-configured capstone template, or optionally import from a public GitHub repository.
         </p>
       </div>
 
       <!-- Mandatory Security Warning -->
       <div class="p-3.5 rounded-lg bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs space-y-1">
         <div class="font-semibold text-amber-300 flex items-center gap-1.5">
-          <span>⚠️ Mandatory Privacy Notice:</span>
+          <span>⚠️ Privacy Notice:</span>
         </div>
         <p class="text-[11px] text-amber-200/90 leading-relaxed">
-          Only use public code. Do not upload or paste confidential, company, or proprietary code.
+          All code stays in your browser session. Only use public or academic code. Do not upload confidential or private API keys.
         </p>
       </div>
 
-      <!-- GitHub Repo Input Form -->
-      <div class="space-y-3">
+      <!-- Method Tabs -->
+      <div class="flex flex-wrap gap-2 border-b border-[#1F2937] pb-3" role="tablist" aria-label="Code Input Options">
+        <button 
+          type="button" 
+          id="tab-btn-paste" 
+          role="tab" 
+          aria-selected="true" 
+          aria-controls="panel-paste"
+          class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-smooth bg-blue-600 text-white shadow-sm flex items-center gap-1.5 min-h-[40px]"
+        >
+          <span>📋</span>
+          <span>Paste Code</span>
+        </button>
+        <button 
+          type="button" 
+          id="tab-btn-upload" 
+          role="tab" 
+          aria-selected="false" 
+          aria-controls="panel-upload"
+          class="px-3.5 py-2 rounded-lg text-xs font-medium transition-smooth bg-[#1F2937] text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5 min-h-[40px]"
+        >
+          <span>📁</span>
+          <span>Upload File</span>
+        </button>
+        <button 
+          type="button" 
+          id="tab-btn-templates" 
+          role="tab" 
+          aria-selected="false" 
+          aria-controls="panel-templates"
+          class="px-3.5 py-2 rounded-lg text-xs font-medium transition-smooth bg-[#1F2937] text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5 min-h-[40px]"
+        >
+          <span>⚡</span>
+          <span>Sample Templates</span>
+        </button>
+        <button 
+          type="button" 
+          id="tab-btn-github" 
+          role="tab" 
+          aria-selected="false" 
+          aria-controls="panel-github"
+          class="px-3.5 py-2 rounded-lg text-xs font-medium transition-smooth bg-[#1F2937] text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5 min-h-[40px]"
+        >
+          <span>🐙</span>
+          <span>GitHub URL <span class="text-[10px] text-slate-400 font-normal">(Optional)</span></span>
+        </button>
+      </div>
+
+      <!-- Option 1: Paste Code -->
+      <div id="panel-paste" class="space-y-4">
+        <div>
+          <label for="paste-filename" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+            File / Component Name
+          </label>
+          <input 
+            type="text" 
+            id="paste-filename" 
+            value="OrderCheckoutService.js" 
+            placeholder="e.g. UserController.js, model_trainer.py, StudentService.java" 
+            class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-smooth font-mono min-h-[44px]"
+          />
+        </div>
+        <div>
+          <label for="paste-code-content" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+            Source Code or Module Implementation
+          </label>
+          <textarea 
+            id="paste-code-content" 
+            rows="7" 
+            placeholder="// Paste any JavaScript, Python, Java, C++, Dart, or Go code from your project here..." 
+            class="w-full bg-[#0B0F17] border border-[#1F2937] rounded-lg p-3 text-xs text-white placeholder-slate-500 focus:outline-none transition-smooth font-mono"
+          ></textarea>
+        </div>
+        <div class="flex justify-end">
+          <button 
+            type="button" 
+            id="paste-apply-btn" 
+            class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm flex items-center gap-1.5 min-h-[44px]"
+          >
+            <span>✓</span>
+            <span>Use This Code &rarr;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Option 2: Upload File -->
+      <div id="panel-upload" class="hidden space-y-4">
+        <label for="local-file-input" class="block p-6 rounded-lg border-2 border-dashed border-[#1F2937] hover:border-blue-500/50 bg-[#0B0F17] text-center cursor-pointer transition-smooth group">
+          <div class="flex flex-col items-center justify-center space-y-2">
+            <span class="text-3xl group-hover:scale-110 transition-transform">📁</span>
+            <span class="text-xs sm:text-sm font-semibold text-white group-hover:text-blue-400">
+              Click to select or drag &amp; drop a code file
+            </span>
+            <span class="text-[11px] text-slate-500">
+              Supports .js, .py, .java, .cpp, .html, .css, .ts, .dart, .sql, .json (Max 100 KB)
+            </span>
+          </div>
+          <input 
+            type="file" 
+            id="local-file-input" 
+            accept=".js,.jsx,.ts,.tsx,.py,.java,.cpp,.c,.cs,.html,.css,.dart,.go,.rs,.sql,.php,.txt,.json" 
+            class="hidden" 
+          />
+        </label>
+      </div>
+
+      <!-- Option 3: Built-in Capstone Templates -->
+      <div id="panel-templates" class="hidden space-y-3">
+        <p class="text-xs text-slate-400">
+          Select any pre-configured capstone engineering module to practice immediately:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button 
+            type="button" 
+            class="template-card-btn text-left p-3.5 rounded-lg border border-[#1F2937] bg-[#0B0F17] hover:bg-[#151D2C] hover:border-blue-500/50 transition-smooth group"
+            data-template="ecommerce"
+          >
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-white group-hover:text-blue-400">🛒 E-Commerce Checkout</span>
+              <span class="text-[10px] font-mono text-slate-400">JS / React</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Order processing, idempotency, Stripe payment gateway &amp; error state management.</p>
+          </button>
+
+          <button 
+            type="button" 
+            class="template-card-btn text-left p-3.5 rounded-lg border border-[#1F2937] bg-[#0B0F17] hover:bg-[#151D2C] hover:border-blue-500/50 transition-smooth group"
+            data-template="auth"
+          >
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-white group-hover:text-blue-400">🔐 JWT Auth Middleware</span>
+              <span class="text-[10px] font-mono text-slate-400">Python / Flask</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Bearer token validation, token expiry, role-based decorators &amp; session security.</p>
+          </button>
+
+          <button 
+            type="button" 
+            class="template-card-btn text-left p-3.5 rounded-lg border border-[#1F2937] bg-[#0B0F17] hover:bg-[#151D2C] hover:border-blue-500/50 transition-smooth group"
+            data-template="ml"
+          >
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-white group-hover:text-blue-400">🤖 ML Fraud Predictor</span>
+              <span class="text-[10px] font-mono text-slate-400">Python / NumPy</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Feature normalization, dot-product logits, probability thresholds &amp; telemetry.</p>
+          </button>
+
+          <button 
+            type="button" 
+            class="template-card-btn text-left p-3.5 rounded-lg border border-[#1F2937] bg-[#0B0F17] hover:bg-[#151D2C] hover:border-blue-500/50 transition-smooth group"
+            data-template="student_db"
+          >
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-white group-hover:text-blue-400">🎓 Student Academic Records</span>
+              <span class="text-[10px] font-mono text-slate-400">Java / JDBC</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Synchronized CGPA calculations, prepared SQL statements &amp; caching logic.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Option 4: GitHub Repo Input Form (Optional) -->
+      <div id="panel-github" class="hidden space-y-3">
         <label for="github-repo-url" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-          Public GitHub Repository URL
+          Public GitHub Repository URL <span class="text-[10px] text-slate-500 font-normal lowercase">(optional)</span>
         </label>
         
         <div class="flex flex-col sm:flex-row gap-2.5">
@@ -142,16 +307,13 @@
         </div>
       </div>
 
-      <!-- Quick Offline Test Shortcut -->
-      <div class="pt-2 border-t border-[#1F2937] flex items-center justify-between text-xs">
-        <span class="text-slate-400">Testing offline or hitting rate limits?</span>
-        <button type="button" id="load-sample-btn" class="text-blue-400 hover:text-blue-300 underline font-medium">
-          Load Sample Checkout Code
-        </button>
+      <!-- Quick Offline Test Shortcut (kept for backward compatibility) -->
+      <div class="hidden">
+        <button type="button" id="load-sample-btn">Load Sample Checkout Code</button>
       </div>
 
-      <!-- File Picker (Visible once tree loads) -->
-      <div id="file-picker-container" class="hidden border-t border-[#1F2937] pt-5 space-y-4">
+      <!-- File Picker (Visible once tree loads for GitHub, or hidden when using direct code) -->
+      <div id="file-picker-container" class="hidden border-t border-[#1F2937] pt-4 space-y-4">
         <div>
           <label for="repo-file-select" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
             Select a Code File (<span id="eligible-files-count">0</span> eligible files found):
@@ -163,23 +325,26 @@
             <!-- Options populated dynamically -->
           </select>
         </div>
+      </div>
 
-        <!-- File Inspection Status & Snippet -->
-        <div id="file-preview-card" class="hidden p-4 rounded-lg bg-[#0B0F17] border border-[#1F2937] space-y-2">
-          <div class="flex items-center justify-between text-xs font-mono">
-            <span id="preview-filename" class="text-blue-400 font-semibold truncate"></span>
-            <span id="preview-filesize" class="text-slate-400 shrink-0"></span>
+      <!-- File Inspection Status & Snippet (Universal Preview Card for All 4 Methods) -->
+      <div id="file-preview-card" class="hidden p-4 rounded-lg bg-[#0B0F17] border border-[#1F2937] space-y-3">
+        <div class="flex items-center justify-between text-xs font-mono border-b border-[#1F2937] pb-2">
+          <div class="flex items-center gap-2 truncate">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-slate-400 text-[11px]">Active Code File:</span>
+            <span id="preview-filename" class="text-blue-400 font-bold truncate"></span>
           </div>
-          <pre id="code-snippet-preview" class="text-[11px] font-mono text-slate-300 max-h-36 overflow-y-auto whitespace-pre-wrap bg-[#111827]/60 p-3 rounded border border-[#1F2937]"></pre>
+          <span id="preview-filesize" class="text-slate-400 shrink-0 text-[11px]"></span>
         </div>
-
-        <div class="flex justify-end pt-2">
+        <pre id="code-snippet-preview" class="text-[11px] font-mono text-slate-300 max-h-40 overflow-y-auto whitespace-pre-wrap bg-[#111827]/60 p-3 rounded border border-[#1F2937]"></pre>
+        <div class="flex justify-end pt-1">
           <button 
             type="button" 
             id="proceed-to-mode-btn" 
-            class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm"
+            class="px-6 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs sm:text-sm transition-smooth shadow-sm flex items-center gap-1.5 min-h-[44px]"
           >
-            Continue to Interviewer Mode &rarr;
+            <span>Continue to Interviewer Mode &rarr;</span>
           </button>
         </div>
       </div>

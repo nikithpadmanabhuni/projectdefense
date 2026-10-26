@@ -45,6 +45,139 @@ export class OrderCheckoutService {
   }
 }`;
 
+// Built-in Capstone Templates (Zero-friction viva practice without GitHub)
+const TEMPLATES = {
+  ecommerce: {
+    path: 'OrderCheckoutService.js',
+    content: SAMPLE_OFFLINE_CODE
+  },
+  auth: {
+    path: 'auth_middleware.py',
+    content: `# JWT Authentication & Security Middleware
+import jwt
+import time
+from functools import wraps
+from flask import request, jsonify
+
+SECRET_KEY = "production-app-secret-key-change-in-env"
+ALGORITHM = "HS256"
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if "Authorization" in request.headers:
+            auth_header = request.headers["Authorization"]
+            if auth_header.startswith("Bearer "):
+                token = auth_header.split(" ")[1]
+        
+        if not token:
+            return jsonify({"error": "Authorization token missing", "status": 401}), 401
+            
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            if payload.get("exp") < time.time():
+                return jsonify({"error": "Token expired. Please re-authenticate", "status": 401}), 401
+            current_user = payload.get("user_id")
+            role = payload.get("role", "student")
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token signature expired", "status": 401}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid credential token supplied", "status": 401}), 401
+            
+        return f(current_user, role, *args, **kwargs)
+    return decorated
+`
+  },
+  ml: {
+    path: 'fraud_detection_pipeline.py',
+    content: `# Machine Learning Fraud Detection & Inference Service
+import numpy as np
+import logging
+
+class FraudDetectionModel:
+    def __init__(self, model_weights_path=None, threshold=0.85):
+        self.threshold = threshold
+        self.logger = logging.getLogger("MLInferenceService")
+        self.feature_means = np.array([120.5, 3.2, 0.05, 1.4])
+        self.weights = np.array([0.42, 0.28, 0.85, 0.15])
+        
+    def preprocess_features(self, raw_transaction):
+        amount = float(raw_transaction.get("amount", 0.0))
+        velocity = float(raw_transaction.get("txn_last_hour", 1))
+        risk_score = float(raw_transaction.get("ip_risk_score", 0.0))
+        hour_of_day = float(raw_transaction.get("hour", 12)) / 24.0
+        
+        features = np.array([amount, velocity, risk_score, hour_of_day])
+        normalized = (features - self.feature_means) / (self.feature_means + 1e-6)
+        return normalized
+
+    def predict(self, raw_transaction):
+        try:
+            features = self.preprocess_features(raw_transaction)
+            raw_logit = np.dot(features, self.weights)
+            probability = 1.0 / (1.0 + np.exp(-raw_logit))
+            
+            is_fraud = bool(probability >= self.threshold)
+            self.logger.info(f"Transaction scored: {probability:.4f} (Flagged: {is_fraud})")
+            return {
+                "fraud_probability": round(float(probability), 4),
+                "is_flagged": is_fraud,
+                "confidence_interval": 0.95
+            }
+        except Exception as e:
+            self.logger.error(f"Inference failure: {str(e)}")
+            return {"error": "Prediction pipeline failed", "fallback_flag": True}
+`
+  },
+  student_db: {
+    path: 'StudentManagementService.java',
+    content: `// Student Academic Records & CGPA Calculation Service
+package com.projectdefense.academic;
+
+import java.sql.*;
+import java.util.*;
+
+public class StudentManagementService {
+    private final String dbUrl;
+    private final Map<String, Double> cgpaCache = new HashMap<>();
+
+    public StudentManagementService(String dbUrl) {
+        this.dbUrl = dbUrl;
+    }
+
+    public synchronized double calculateCGPA(String studentId, List<Integer> courseCredits, List<Double> gradePoints) throws SQLException {
+        if (studentId == null || courseCredits.size() != gradePoints.size() || courseCredits.isEmpty()) {
+            throw new IllegalArgumentException("Mismatched or empty grade parameters.");
+        }
+
+        double totalCredits = 0.0;
+        double weightedPoints = 0.0;
+
+        for (int i = 0; i < courseCredits.size(); i++) {
+            int credit = courseCredits.get(i);
+            double grade = gradePoints.get(i);
+            totalCredits += credit;
+            weightedPoints += (credit * grade);
+        }
+
+        double calculatedCGPA = Math.round((weightedPoints / totalCredits) * 100.0) / 100.0;
+        cgpaCache.put(studentId, calculatedCGPA);
+
+        try (Connection conn = DriverManager.getConnection(this.dbUrl);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE students SET cgpa = ?, updated_at = NOW() WHERE student_id = ?")) {
+            stmt.setDouble(1, calculatedCGPA);
+            stmt.setString(2, studentId);
+            stmt.executeUpdate();
+        }
+
+        return calculatedCGPA;
+    }
+}
+`
+  }
+};
+
 // Application State
 const state = {
   step: 1,
@@ -82,7 +215,7 @@ async function initEngineBadge() {
 }
 
 // ==========================================
-// STEP 1 HANDLERS: REPO IMPORT & FILE SELECT
+// STEP 1 HANDLERS: CODE IMPORT (PASTE, UPLOAD, TEMPLATE, OR OPTIONAL GITHUB)
 // ==========================================
 function setupStep1Handlers() {
   const loadBtn = document.getElementById('load-repo-btn');
@@ -91,11 +224,127 @@ function setupStep1Handlers() {
   const fileSelect = document.getElementById('repo-file-select');
   const proceedBtn = document.getElementById('proceed-to-mode-btn');
 
-  // Load Repo Button
+  const tabPasteBtn = document.getElementById('tab-btn-paste');
+  const tabUploadBtn = document.getElementById('tab-btn-upload');
+  const tabTemplatesBtn = document.getElementById('tab-btn-templates');
+  const tabGithubBtn = document.getElementById('tab-btn-github');
+
+  const panelPaste = document.getElementById('panel-paste');
+  const panelUpload = document.getElementById('panel-upload');
+  const panelTemplates = document.getElementById('panel-templates');
+  const panelGithub = document.getElementById('panel-github');
+
+  const pasteFilenameInput = document.getElementById('paste-filename');
+  const pasteCodeInput = document.getElementById('paste-code-content');
+  const pasteApplyBtn = document.getElementById('paste-apply-btn');
+  const localFileInput = document.getElementById('local-file-input');
+
+  const tabs = [
+    { btn: tabPasteBtn, panel: panelPaste },
+    { btn: tabUploadBtn, panel: panelUpload },
+    { btn: tabTemplatesBtn, panel: panelTemplates },
+    { btn: tabGithubBtn, panel: panelGithub }
+  ];
+
+  function switchTab(activeBtn, activePanel) {
+    clearStep1Error();
+    tabs.forEach(({ btn, panel }) => {
+      if (!btn || !panel) return;
+      if (btn === activeBtn) {
+        btn.setAttribute('aria-selected', 'true');
+        btn.className = 'px-3.5 py-2 rounded-lg text-xs font-semibold transition-smooth bg-blue-600 text-white shadow-sm flex items-center gap-1.5 min-h-[40px]';
+        panel.classList.remove('hidden');
+      } else {
+        btn.setAttribute('aria-selected', 'false');
+        btn.className = 'px-3.5 py-2 rounded-lg text-xs font-medium transition-smooth bg-[#1F2937] text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5 min-h-[40px]';
+        panel.classList.add('hidden');
+      }
+    });
+  }
+
+  if (tabPasteBtn) tabPasteBtn.addEventListener('click', () => switchTab(tabPasteBtn, panelPaste));
+  if (tabUploadBtn) tabUploadBtn.addEventListener('click', () => switchTab(tabUploadBtn, panelUpload));
+  if (tabTemplatesBtn) tabTemplatesBtn.addEventListener('click', () => switchTab(tabTemplatesBtn, panelTemplates));
+  if (tabGithubBtn) tabGithubBtn.addEventListener('click', () => switchTab(tabGithubBtn, panelGithub));
+
+  // Pre-fill paste textarea with default sample code for instant start
+  if (pasteCodeInput && !pasteCodeInput.value) {
+    pasteCodeInput.value = SAMPLE_OFFLINE_CODE;
+    handleFileSelected('OrderCheckoutService.js', SAMPLE_OFFLINE_CODE, SAMPLE_OFFLINE_CODE.length);
+  }
+
+  // 1. Paste Code Handler
+  if (pasteApplyBtn) {
+    pasteApplyBtn.addEventListener('click', () => {
+      clearStep1Error();
+      const code = pasteCodeInput ? pasteCodeInput.value.trim() : '';
+      if (!code) {
+        showStep1Error('Please paste your source code into the editor box first.');
+        return;
+      }
+      const fileName = (pasteFilenameInput && pasteFilenameInput.value.trim()) || 'CustomProjectModule.js';
+      state.repoOwner = 'local';
+      state.repoName = 'direct-input';
+      handleFileSelected(fileName, code, code.length);
+    });
+  }
+
+  // 2. Upload File Handler
+  if (localFileInput) {
+    localFileInput.addEventListener('change', () => {
+      clearStep1Error();
+      const file = localFileInput.files && localFileInput.files[0];
+      if (!file) return;
+
+      if (file.size > 100 * 1024) {
+        showStep1Error('File exceeds 100 KB limit. Please select a single source code file.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = String(e.target.result);
+        state.repoOwner = 'local';
+        state.repoName = 'uploaded-file';
+        handleFileSelected(file.name, content, file.size);
+
+        if (pasteFilenameInput) pasteFilenameInput.value = file.name;
+        if (pasteCodeInput) pasteCodeInput.value = content;
+      };
+      reader.onerror = () => {
+        showStep1Error('Could not read the uploaded file. Please try pasting the code text instead.');
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  // 3. Sample Templates Handler
+  document.querySelectorAll('.template-card-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      clearStep1Error();
+      const key = btn.dataset.template;
+      const tmpl = TEMPLATES[key];
+      if (tmpl) {
+        state.repoOwner = 'demo';
+        state.repoName = 'template-' + key;
+        handleFileSelected(tmpl.path, tmpl.content, tmpl.content.length);
+
+        if (pasteFilenameInput) pasteFilenameInput.value = tmpl.path;
+        if (pasteCodeInput) pasteCodeInput.value = tmpl.content;
+      }
+    });
+  });
+
+  // 4. Optional GitHub Repo Button
   if (loadBtn) {
     loadBtn.addEventListener('click', async () => {
       clearStep1Error();
       const rawUrl = urlInput.value.trim();
+
+      if (!rawUrl) {
+        showStep1Error('Please enter a public GitHub repository URL, or switch to the "Paste Code" / "Sample Templates" tab.');
+        return;
+      }
 
       try {
         const { owner, repo } = parseGitHubUrl(rawUrl);
@@ -121,7 +370,7 @@ function setupStep1Handlers() {
     });
   }
 
-  // Load Sample Code Button (for offline test / rate limit bypass)
+  // Quick Load Sample Code Button (kept for backward compatibility)
   if (sampleBtn) {
     sampleBtn.addEventListener('click', () => {
       clearStep1Error();
@@ -164,7 +413,7 @@ function setupStep1Handlers() {
   if (proceedBtn) {
     proceedBtn.addEventListener('click', () => {
       if (!state.selectedFile || !state.selectedFile.content) {
-        showStep1Error('Please select a valid code file first.');
+        showStep1Error('Please select or paste a valid code file first.');
         return;
       }
       renderStep(2);
