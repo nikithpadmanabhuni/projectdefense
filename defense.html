@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com; img-src 'self' data:;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B0F17" />
+  <meta name="description" content="Simulate an oral capstone project defense against 3 interviewer personas with line-by-line questions on your own GitHub code." />
+  <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
   <title>Project Defense Simulator | ProjectDefense</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -23,8 +30,14 @@
   <main id="main-defense-workstation" class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
     
     <!-- Top Progress Steps Indicator -->
-    <nav aria-label="Defense Progress" class="border-b border-[#1F2937] pb-6">
-      <div class="flex items-center justify-between max-w-2xl mx-auto text-xs font-mono">
+    <nav aria-label="Defense Progress" class="border-b border-[#1F2937] pb-4">
+      <!-- Compact Mobile Indicator (< sm) -->
+      <div class="sm:hidden text-center text-xs font-mono text-blue-400 font-bold py-1" id="mobile-step-summary">
+        Step 1 of 4: Import Code
+      </div>
+
+      <!-- Desktop Steps Bar (>= sm) -->
+      <div class="hidden sm:flex items-center justify-between max-w-2xl mx-auto text-xs font-mono">
         
         <!-- Step 1 Indicator -->
         <div id="step-ind-1" class="flex items-center gap-2 text-blue-400 font-bold">
@@ -104,12 +117,16 @@
             type="url" 
             id="github-repo-url" 
             placeholder="https://github.com/facebook/react or https://github.com/owner/project" 
-            class="flex-1 bg-[#0B0F17] border border-[#1F2937] rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth font-mono"
+            inputmode="url"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            class="flex-1 bg-[#0B0F17] border border-[#1F2937] rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth font-mono min-h-[44px]"
           />
           <button 
             type="button" 
             id="load-repo-btn" 
-            class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth whitespace-nowrap shadow-sm disabled:opacity-50"
+            class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm transition-smooth whitespace-nowrap shadow-sm disabled:opacity-50 min-h-[44px]"
           >
             Load repo
           </button>

@@ -2,10 +2,59 @@
  * github.js
  * Parses GitHub repository URLs and fetches repo metadata, file tree, and file content
  * using the public GitHub REST API.
+ * Includes AbortController timeouts (15s) and user-friendly error fallbacks.
  */
 
 const ALLOWED_EXTENSIONS = ['.js', '.dart', '.html', '.py', '.java', '.ts', '.css'];
 const MAX_FILE_SIZE_BYTES = 50 * 1024; // 50KB limit
+const GITHUB_TIMEOUT_MS = 15000; // 15 seconds timeout
+
+/**
+ * Executes a fetch with a 15-second timeout and plain-language error mapping.
+ * @param {string} url 
+ * @param {RequestInit} [options] 
+ * @returns {Promise<Response>}
+ */
+async function fetchWithTimeout(url, options = {}) {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw new Error('You appear to be offline. Reconnect and try again.');
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), GITHUB_TIMEOUT_MS);
+
+  try {
+    const res = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        ...(options.headers || {})
+      }
+    });
+    clearTimeout(timer);
+
+    if (res.status === 404) {
+      throw new Error('Repository not found, or it is private. Only public repos work.');
+    }
+    if (res.status === 403) {
+      throw new Error('GitHub limit reached for now. Wait about an hour and try again.');
+    }
+    if (!res.ok) {
+      throw new Error(`GitHub returned an error (HTTP ${res.status}). Please try again.`);
+    }
+    return res;
+  } catch (err) {
+    clearTimeout(timer);
+    if (err.name === 'AbortError') {
+      throw new Error('The request took too long. Try again on a stronger connection.');
+    }
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      throw new Error('You appear to be offline. Reconnect and try again.');
+    }
+    throw err;
+  }
+}
 
 /**
  * Parses a GitHub repository URL into owner and repo.
@@ -73,31 +122,9 @@ export function isEligibleCodeFile(path) {
  */
 export async function fetchRepoMetadata(owner, repo) {
   const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
-  
-  let res;
-  try {
-    res = await fetch(url, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json'
-      }
-    });
-  } catch (err) {
-    throw new Error('Network error connecting to GitHub. Please check your internet connection.');
-  }
-
-  if (res.status === 404) {
-    throw new Error('Repository not found or is private. Make sure the URL is spelled correctly and the repo is public.');
-  }
-
-  if (res.status === 403) {
-    throw new Error('GitHub API rate limit reached (unauthenticated requests are limited to 60/hr). Please wait a few minutes and try again.');
-  }
-
-  if (!res.ok) {
-    throw new Error(`GitHub returned an error (HTTP ${res.status}). Please try again.`);
-  }
-
+  const res = await fetchWithTimeout(url);
   const data = await res.json();
+
   return {
     defaultBranch: data.default_branch || 'main',
     description: data.description || '',
@@ -114,27 +141,9 @@ export async function fetchRepoMetadata(owner, repo) {
  */
 export async function fetchRepoFileTree(owner, repo, defaultBranch) {
   const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`;
-
-  let res;
-  try {
-    res = await fetch(url, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json'
-      }
-    });
-  } catch (err) {
-    throw new Error('Network error while fetching repository file tree.');
-  }
-
-  if (res.status === 403) {
-    throw new Error('GitHub API rate limit reached (60 req/hr). Please try again in a few minutes.');
-  }
-
-  if (!res.ok) {
-    throw new Error(`Failed to load file tree (HTTP ${res.status}).`);
-  }
-
+  const res = await fetchWithTimeout(url);
   const data = await res.json();
+
   if (!data.tree || !Array.isArray(data.tree)) {
     throw new Error('Could not parse repository files.');
   }
@@ -164,30 +173,7 @@ export async function fetchRepoFileTree(owner, repo, defaultBranch) {
  */
 export async function fetchFileContent(owner, repo, path) {
   const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encodeURIComponent(path)}`;
-
-  let res;
-  try {
-    res = await fetch(url, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json'
-      }
-    });
-  } catch (err) {
-    throw new Error('Network error while retrieving file content.');
-  }
-
-  if (res.status === 403) {
-    throw new Error('GitHub API rate limit reached. Please wait a few minutes.');
-  }
-
-  if (res.status === 404) {
-    throw new Error('The selected file could not be found.');
-  }
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch file content (HTTP ${res.status}).`);
-  }
-
+  const res = await fetchWithTimeout(url);
   const data = await res.json();
 
   if (data.size > MAX_FILE_SIZE_BYTES) {

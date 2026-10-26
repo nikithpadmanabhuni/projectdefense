@@ -2,10 +2,42 @@
  * api-client.js
  * Client-side interface for generating questions and grading answers.
  * Attempts to call the serverless endpoint `/api/defense`.
- * If no key exists or network fails, automatically falls back to offline Mock Mode.
+ * Enforces 25s timeout and gracefully degrades to offline Mock Mode on any failure.
  */
 
 import { generateMockQuestions, evaluateMockAnswer, getStudyConcepts } from './mock.js';
+
+const AI_ROUTE_TIMEOUT_MS = 25000; // 25 seconds limit for LLM inference
+
+/**
+ * Checks if Live AI is configured on the backend without triggering question generation.
+ * @returns {Promise<{ ok: boolean, liveAvailable: boolean }>}
+ */
+export async function checkLiveAiAvailability() {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    return { ok: false, liveAvailable: false };
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const res = await fetch('/api/defense', {
+      method: 'GET',
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+
+    if (res.ok) {
+      const data = await res.json();
+      return { ok: true, liveAvailable: Boolean(data.liveAvailable) };
+    }
+  } catch (_) {
+    clearTimeout(timer);
+  }
+
+  return { ok: false, liveAvailable: false };
+}
 
 /**
  * Generates 3 interview questions for the given code and mode.
@@ -15,10 +47,18 @@ import { generateMockQuestions, evaluateMockAnswer, getStudyConcepts } from './m
  * @returns {Promise<{ isMock: boolean, questions: Array<any>, studyConcepts: Array<string> }>}
  */
 export async function getInterviewQuestions(code, fileName, mode) {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    return getOfflineMockQuestions(code, fileName, mode);
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AI_ROUTE_TIMEOUT_MS);
+
   try {
     const res = await fetch('/api/defense', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         action: 'questions',
         mode,
@@ -26,6 +66,7 @@ export async function getInterviewQuestions(code, fileName, mode) {
         code
       })
     });
+    clearTimeout(timer);
 
     if (res.ok) {
       const data = await res.json();
@@ -37,19 +78,12 @@ export async function getInterviewQuestions(code, fileName, mode) {
         };
       }
     }
-  } catch (err) {
-    // Network error or local static server without serverless runtime
+  } catch (_) {
+    clearTimeout(timer);
+    // Silent degradation to Mock Mode
   }
 
-  // Graceful fallback to deterministic offline Mock Mode
-  const mockQuestions = generateMockQuestions(code, fileName, mode);
-  const mockConcepts = getStudyConcepts(code);
-
-  return {
-    isMock: true,
-    questions: mockQuestions,
-    studyConcepts: mockConcepts
-  };
+  return getOfflineMockQuestions(code, fileName, mode);
 }
 
 /**
@@ -62,10 +96,18 @@ export async function getInterviewQuestions(code, fileName, mode) {
  * @returns {Promise<{ isMock: boolean, clarity: number, accuracy: number, depth: number, total: number, feedback: string }>}
  */
 export async function gradeStudentAnswer(question, answer, code, fileName, mode) {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    return getOfflineMockEvaluation(question, answer, code, mode);
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AI_ROUTE_TIMEOUT_MS);
+
   try {
     const res = await fetch('/api/defense', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         action: 'grade',
         mode,
@@ -75,6 +117,7 @@ export async function gradeStudentAnswer(question, answer, code, fileName, mode)
         answer
       })
     });
+    clearTimeout(timer);
 
     if (res.ok) {
       const data = await res.json();
@@ -85,11 +128,25 @@ export async function gradeStudentAnswer(question, answer, code, fileName, mode)
         };
       }
     }
-  } catch (err) {
-    // Fall through to mock
+  } catch (_) {
+    clearTimeout(timer);
+    // Silent degradation to Mock Mode
   }
 
-  // Offline mock rubric evaluation
+  return getOfflineMockEvaluation(question, answer, code, mode);
+}
+
+function getOfflineMockQuestions(code, fileName, mode) {
+  const mockQuestions = generateMockQuestions(code, fileName, mode);
+  const mockConcepts = getStudyConcepts(code);
+  return {
+    isMock: true,
+    questions: mockQuestions,
+    studyConcepts: mockConcepts
+  };
+}
+
+function getOfflineMockEvaluation(question, answer, code, mode) {
   const mockResult = evaluateMockAnswer(question, answer, code, mode);
   return {
     isMock: true,

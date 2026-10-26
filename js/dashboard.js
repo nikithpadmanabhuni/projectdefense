@@ -4,6 +4,7 @@
  */
 
 import { getProfile, clearProfile, clearAllData, getChecklist, saveChecklist, getAttempts, getSprintProgress } from './storage.js';
+import { checkEnvironment, getDiagnosticSummary, copyToClipboard } from './env.js';
 
 const CHECKLIST_ITEMS = [
   'Projects are deployed with a live link',
@@ -23,6 +24,8 @@ if (typeof document !== 'undefined') {
     const resetAllBtn = document.getElementById('dash-reset-all-btn');
 
     const profile = getProfile();
+
+    initDeviceCheck();
 
     if (!profile) {
       if (noProfileState) noProfileState.classList.remove('hidden');
@@ -194,5 +197,86 @@ function setTextSafe(id, text) {
   const el = document.getElementById(id);
   if (el) {
     el.textContent = text;
+  }
+}
+
+/**
+ * Renders the device diagnostic check results (Phase 5 Step 1).
+ */
+function initDeviceCheck() {
+  const container = document.getElementById('device-check-list');
+  const copyBtn = document.getElementById('copy-diagnostics-btn');
+  const copyStatus = document.getElementById('copy-diagnostics-status');
+  if (!container) return;
+
+  const env = checkEnvironment();
+  container.innerHTML = '';
+
+  const checks = [
+    {
+      label: 'Saving data on this device',
+      status: env.localStorageOk ? 'OK' : 'Restricted (In-Memory)',
+      ok: env.localStorageOk
+    },
+    {
+      label: 'Background worker',
+      status: env.workerOk ? 'Supported' : 'Not supported',
+      ok: env.workerOk
+    },
+    {
+      label: 'Network fetch',
+      status: env.fetchOk ? 'Available' : 'Unavailable',
+      ok: env.fetchOk
+    },
+    {
+      label: 'File export (Blob/Download)',
+      status: env.downloadOk ? 'Supported' : 'Textarea Fallback',
+      ok: env.downloadOk
+    },
+    {
+      label: 'Connection status',
+      status: env.online ? 'Online' : 'Offline',
+      ok: env.online
+    },
+    {
+      label: 'Device / Browser',
+      status: env.userAgentSummary,
+      ok: true
+    },
+    {
+      label: 'Screen resolution',
+      status: `${env.screen.width}x${env.screen.height}`,
+      ok: true
+    }
+  ];
+
+  checks.forEach((item) => {
+    const row = document.createElement('div');
+    row.className = 'p-2 rounded bg-[#0B0F17] border border-[#1F2937] flex items-center justify-between gap-2';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'text-slate-400 text-[11px] truncate';
+    lbl.textContent = item.label;
+
+    const val = document.createElement('span');
+    val.className = `text-[11px] font-medium px-2 py-0.5 rounded ${
+      item.ok ? 'text-emerald-400 bg-emerald-950/40 border border-emerald-500/20' : 'text-amber-400 bg-amber-950/40 border border-amber-500/20'
+    }`;
+    val.textContent = item.status;
+
+    row.appendChild(lbl);
+    row.appendChild(val);
+    container.appendChild(row);
+  });
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const summary = getDiagnosticSummary(env);
+      const success = await copyToClipboard(summary);
+      if (success && copyStatus) {
+        copyStatus.classList.remove('hidden');
+        setTimeout(() => copyStatus.classList.add('hidden'), 2500);
+      }
+    });
   }
 }

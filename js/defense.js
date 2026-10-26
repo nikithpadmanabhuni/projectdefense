@@ -8,7 +8,7 @@
  */
 
 import { parseGitHubUrl, fetchRepoMetadata, fetchRepoFileTree, fetchFileContent } from './github.js';
-import { getInterviewQuestions, gradeStudentAnswer } from './api-client.js';
+import { getInterviewQuestions, gradeStudentAnswer, checkLiveAiAvailability } from './api-client.js';
 import { saveDefenseResult } from './storage.js';
 
 // Sample fallback code for zero-friction offline testing
@@ -67,7 +67,17 @@ if (typeof document !== 'undefined') {
     setupStep3Handlers();
     setupStep4Handlers();
     renderStep(1);
+    initEngineBadge();
   });
+}
+
+async function initEngineBadge() {
+  try {
+    const status = await checkLiveAiAvailability();
+    updateEngineStatusBadge(!status.liveAvailable);
+  } catch (_) {
+    updateEngineStatusBadge(true);
+  }
 }
 
 // ==========================================
@@ -388,40 +398,45 @@ function renderQuestionCards(questions) {
     qText.className = 'text-sm font-semibold text-white leading-relaxed';
     qText.textContent = q.text;
 
-    // Answer Label
+    // Answer Label & Counter Row (placed above textarea to remain visible on mobile keyboards)
+    const labelRow = document.createElement('div');
+    labelRow.className = 'flex items-center justify-between text-[11px]';
+
     const label = document.createElement('label');
     label.setAttribute('for', `answer-${index}`);
-    label.className = 'block text-[11px] font-semibold text-slate-400 uppercase tracking-wider';
+    label.className = 'block font-semibold text-slate-400 uppercase tracking-wider text-[11px]';
     label.textContent = 'Your Technical Defense:';
+
+    // Character Counter
+    const counter = document.createElement('div');
+    counter.className = 'text-right font-mono text-slate-500 text-[11px]';
+    counter.textContent = '0 / 2000 (min 20)';
+
+    labelRow.appendChild(label);
+    labelRow.appendChild(counter);
 
     // Textarea
     const textarea = document.createElement('textarea');
     textarea.id = `answer-${index}`;
     textarea.rows = 4;
     textarea.maxLength = 2000;
-    textarea.className = 'answer-textarea w-full bg-[#111827] border border-[#1F2937] rounded-lg p-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth';
+    textarea.className = 'answer-textarea w-full bg-[#111827] border border-[#1F2937] rounded-lg p-3 text-sm text-white placeholder-slate-500 focus:outline-none transition-smooth';
     textarea.placeholder = 'Type your technical explanation (e.g. why this pattern was chosen, how errors are caught, and performance trade-offs)...';
-
-    // Character Counter
-    const counter = document.createElement('div');
-    counter.className = 'text-right text-[11px] font-mono text-slate-500';
-    counter.textContent = '0 / 2000 characters (min 20)';
 
     textarea.addEventListener('input', () => {
       const len = textarea.value.trim().length;
-      counter.textContent = `${len} / 2000 characters (min 20)`;
+      counter.textContent = `${len} / 2000 (min 20)`;
       if (len >= 20) {
-        counter.className = 'text-right text-[11px] font-mono text-emerald-400';
+        counter.className = 'text-right font-mono text-emerald-400 text-[11px]';
       } else {
-        counter.className = 'text-right text-[11px] font-mono text-slate-500';
+        counter.className = 'text-right font-mono text-slate-500 text-[11px]';
       }
     });
 
     card.appendChild(header);
     card.appendChild(qText);
-    card.appendChild(label);
+    card.appendChild(labelRow);
     card.appendChild(textarea);
-    card.appendChild(counter);
 
     container.appendChild(card);
   });
@@ -592,6 +607,13 @@ function renderStep(stepNumber) {
       ind.className = 'flex items-center gap-2 text-slate-500';
       ind.querySelector('span').className = 'w-6 h-6 rounded-full bg-[#111827] border border-[#1F2937] text-slate-400 flex items-center justify-center text-xs';
     }
+  }
+
+  // Update compact mobile step label
+  const mobileLabel = document.getElementById('mobile-step-summary');
+  if (mobileLabel) {
+    const titles = ['Import Code', 'Interviewer Mode', 'Defend (Questions)', 'Rubric Results'];
+    mobileLabel.textContent = `Step ${stepNumber} of 4: ${titles[stepNumber - 1]}`;
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });

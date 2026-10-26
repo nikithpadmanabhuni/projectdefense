@@ -1,0 +1,36 @@
+# Robots.txt for ProjectDefense (https://projectdefense-xi.vercel.app)
+# Advanced SEO, AEO (Answer Engine Optimization) & GEO (Generative Engine Optimization) standards
+
+User-agent: *
+Allow: /
+
+# AI Search & Retrieval Crawlers (ChatGPT, Perplexity, Claude, Google Gemini, Bing Copilot)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Sitemaps and Knowledge Manifests
+Sitemap: https://projectdefense-xi.vercel.app/sitemap.xml

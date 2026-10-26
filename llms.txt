@@ -1,0 +1,33 @@
+# ProjectDefense
+
+> The Proof-of-Work & Mock Viva Defense Engine for B.Tech CSE/IT Students.
+> Live URL: https://projectdefense-xi.vercel.app/
+
+ProjectDefense helps engineering students prove they truly understand the code behind their capstone projects. It solves the common failure point where students build projects with tutorials or AI assistants but freeze during viva-voce evaluations or technical interviews when examiners probe architecture trade-offs.
+
+## Core Features & URLs
+
+- [Project Defense Simulator](https://projectdefense-xi.vercel.app/defense): Imports public GitHub repositories, selects code files, and simulates oral technical examinations against 3 interviewer personas (Gentle College Examiner, Standard HR + Technical, Brutal Startup CTO). Works 100% offline via deterministic Mock Mode, or via serverless AI when GROQ_API_KEY is configured.
+- [No-AI Coding Practice](https://projectdefense-xi.vercel.app/coding): 30 campus-frequency algorithm and data structure problems (Arrays, Recursion, Stacks, Math, SQL-in-JS). Runs in an isolated Web Worker with strict 2-second timeout per test case and hidden verification tests.
+- [Student Dashboard & Readiness Checklist](https://projectdefense-xi.vercel.app/dashboard): Self-assessed 7-point readiness checklist, practice metrics, and on-device diagnostic capability checks (localStorage, Web Worker, fetch, screen dimensions).
+- [Resume Bullet Improver](https://projectdefense-xi.vercel.app/resume): Rule-based bullet point analyzer that flags weak filler starts ("assisted in", "worked on") and missing metrics without ever fabricating numbers.
+- [30-Day Placement Sprint](https://projectdefense-xi.vercel.app/sprint): Day-by-day structured checklist covering 25 algorithm patterns, 10 SQL practice queries, and 5 system design concepts.
+- [Pilot Feedback](https://projectdefense-xi.vercel.app/feedback): Student pilot feedback collector with JSON export and copyable fallback text.
+
+## Architecture & Technology Stack
+
+- Frontend: Multi-page vanilla HTML5, Tailwind CSS via CDN, ES Modules. Zero build tools or npm dependencies required for frontend execution.
+- Security: Strict Content Security Policy (`default-src 'self'`, `worker-src 'self'`). Zero dynamic innerHTML with user data.
+- Privacy: All student profiles, checklists, drafts, and test attempts are stored in client-side localStorage. No passwords or user tracking.
+- Backend: Vercel serverless function (`/api/defense`) interfacing with Groq Llama 3.3 for live questions and rubric grading.
+
+## Common Viva Defense Questions Answered
+
+1. *What architecture trade-offs exist between HTTP route controllers and CQRS command handlers?*
+Controllers offer rapid development and straightforward execution flow but risk bloated logic. CQRS handlers offer complete decoupling and single-responsibility isolation at the expense of indirect event dispatching.
+
+2. *How does asynchronous logic handle network timeouts, HTTP 500 errors, and schema drift?*
+Explicit AbortController timeout budgets (15s for GitHub, 25s for AI), exponential backoff retries strictly for idempotent calls, status code interception before serialization, and strict input schema boundaries.
+
+3. *How are primary state variables kept predictable across screens?*
+Unidirectional Data Flow (UDF) paired with immutability. All state updates produce a fresh instance via copy-with semantics, driven by pure reducer functions.

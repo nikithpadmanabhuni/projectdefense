@@ -1,21 +1,42 @@
 /**
  * api/defense.js
- * Vercel-style Serverless Function for ProjectDefense AI.
- * Reads GROQ_API_KEY strictly from server-side environment variables.
- * Never exposes the key or logs student code.
+ * Vercel Serverless Function for ProjectDefense.
+ * 
+ * GET: Returns status and whether Live AI mode is available (without leaking the key).
+ * POST: Handles questions generation or grading via Groq LLM API.
+ * 
+ * Supports both CommonJS and ES Module exports for Vercel serverless compatibility.
  */
 
-export default async function handler(req, res) {
-  // Only allow POST
+async function handler(req, res) {
+  // Always set CORS and JSON headers
+  res.setHeader('Content-Type', 'application/json');
+
+  // Handle GET status check
+  if (req.method === 'GET') {
+    const hasKey = Boolean(process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim() !== '');
+    return res.status(200).json({
+      ok: true,
+      liveAvailable: hasKey
+    });
+  }
+
+  // Only allow POST beyond here
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'METHOD_NOT_ALLOWED', message: 'Only POST requests are permitted.' });
+    res.setHeader('Allow', 'GET, POST');
+    return res.status(405).json({
+      error: 'METHOD_NOT_ALLOWED',
+      message: 'Only GET and POST requests are permitted.'
+    });
   }
 
   // Check for Server-Side Environment Variable
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey || apiKey.trim() === '') {
-    return res.status(503).json({ error: 'NO_KEY', message: 'Server environment variable GROQ_API_KEY is not configured.' });
+    return res.status(503).json({
+      error: 'NO_KEY',
+      message: 'Server environment variable GROQ_API_KEY is not configured.'
+    });
   }
 
   try {
@@ -23,7 +44,10 @@ export default async function handler(req, res) {
 
     // Enforce 50KB payload constraint
     if (code && typeof code === 'string' && code.length > 50 * 1024) {
-      return res.status(413).json({ error: 'PAYLOAD_TOO_LARGE', message: 'Code exceeds 50KB limit.' });
+      return res.status(413).json({
+        error: 'PAYLOAD_TOO_LARGE',
+        message: 'Code exceeds 50KB limit.'
+      });
     }
 
     if (action === 'questions') {
@@ -31,10 +55,16 @@ export default async function handler(req, res) {
     } else if (action === 'grade') {
       return await handleGradeAnswer(apiKey, mode, fileName, code, question, answer, res);
     } else {
-      return res.status(400).json({ error: 'INVALID_ACTION', message: 'Action must be "questions" or "grade".' });
+      return res.status(400).json({
+        error: 'INVALID_ACTION',
+        message: 'Action must be "questions" or "grade".'
+      });
     }
   } catch (err) {
-    return res.status(500).json({ error: 'INTERNAL_ERROR', message: 'An unexpected server error occurred.' });
+    return res.status(500).json({
+      error: 'INTERNAL_ERROR',
+      message: 'An unexpected server error occurred: ' + (err.message || String(err))
+    });
   }
 }
 
@@ -75,7 +105,10 @@ Return strictly valid JSON in this exact structure:
   });
 
   if (!groqRes.ok) {
-    return res.status(502).json({ error: 'UPSTREAM_API_ERROR', message: 'Failed to communicate with LLM provider.' });
+    return res.status(502).json({
+      error: 'UPSTREAM_API_ERROR',
+      message: 'Failed to communicate with LLM provider.'
+    });
   }
 
   const groqData = await groqRes.json();
@@ -99,19 +132,21 @@ Question: "${question}"
 Student's Answer:
 "${answer}"
 
-Grade the answer using this rubric:
-- Clarity (0 to 5): Communication, structure, and readability.
-- Accuracy (0 to 5): Technical correctness and understanding of the code.
-- Depth (0 to 5): Mention of architectural trade-offs, edge cases, or "because" rationale.
+Evaluate the student's answer on 3 criteria (each scored 1 to 3):
+1. Clarity (1-3): Is the explanation concise and structured?
+2. Accuracy (1-3): Is the technical explanation correct regarding the code?
+3. Depth (1-3): Does it mention trade-offs, edge cases, or architecture reasons?
 
-Provide specific, constructive feedback.
-Return strictly valid JSON matching this schema:
+Calculate total score (clarity + accuracy + depth) out of 9.
+Provide constructive, direct feedback (2-3 sentences) on what was good and what was missing.
+
+Return strictly valid JSON in this exact structure:
 {
-  "clarity": integer,
-  "accuracy": integer,
-  "depth": integer,
-  "total": integer,
-  "feedback": "2-3 sentences of honest, constructive feedback."
+  "clarity": 3,
+  "accuracy": 3,
+  "depth": 3,
+  "total": 9,
+  "feedback": "Your constructive feedback here"
 }`;
 
   const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -124,12 +159,15 @@ Return strictly valid JSON matching this schema:
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' },
-      temperature: 0.2
+      temperature: 0.3
     })
   });
 
   if (!groqRes.ok) {
-    return res.status(502).json({ error: 'UPSTREAM_API_ERROR', message: 'Failed to communicate with LLM provider.' });
+    return res.status(502).json({
+      error: 'UPSTREAM_API_ERROR',
+      message: 'Failed to communicate with LLM provider.'
+    });
   }
 
   const groqData = await groqRes.json();
@@ -138,16 +176,26 @@ Return strictly valid JSON matching this schema:
 
   return res.status(200).json({
     isMock: false,
-    ...parsed
+    clarity: parsed.clarity || 2,
+    accuracy: parsed.accuracy || 2,
+    depth: parsed.depth || 2,
+    total: parsed.total || (parsed.clarity + parsed.accuracy + parsed.depth) || 6,
+    feedback: parsed.feedback || 'Good attempt. Focus on articulating architectural trade-offs.'
   });
 }
 
 function getPersonaSystemPrompt(mode) {
-  if (mode === 'gentle') {
-    return 'You are Prof. Sharma, a gentle and encouraging college examiner interviewing a 3rd year B.Tech student on their project code. Ask conceptual questions testing core fundamentals without being intimidating.';
+  switch (mode) {
+    case 'gentle':
+      return 'You are a supportive College Examiner who wants to help students learn. Ask encouraging, foundational questions about why they chose this structure.';
+    case 'brutal':
+      return 'You are a Grumpy Senior Staff Engineer at a top tech company. You have zero tolerance for hand-waving or tutorial-copying. Ask tough, razor-sharp questions grilling them on edge cases, race conditions, memory leaks, and architectural trade-offs.';
+    case 'standard':
+    default:
+      return 'You are an experienced Technical Interviewer. Ask fair, practical, probing questions to verify whether the candidate truly understands their code and can explain their choices.';
   }
-  if (mode === 'brutal') {
-    return 'You are an aggressive, skeptical Senior Startup CTO grilling a candidate. Target weak architecture, missing error boundaries, potential AI boilerplate, race conditions, and lack of unit tests. Be blunt, direct, and rigorous.';
-  }
-  return 'You are a Senior Technical Lead at a software company conducting a standard technical round. Focus on clean code, maintainability, edge cases, input validation, and production best practices.';
 }
+
+// Support both ES Module and CommonJS exports for Vercel
+module.exports = handler;
+module.exports.default = handler;

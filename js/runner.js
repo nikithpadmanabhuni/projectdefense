@@ -26,33 +26,13 @@ function deepEqual(a, b) {
 }
 
 /**
- * Creates an inline Web Worker via Blob URL.
+ * Creates a Web Worker from js/runner-worker.js (adhering strictly to worker-src 'self').
  */
 function createWorker() {
-  const workerScript = `
-    self.onmessage = function(e) {
-      const { code, input } = e.data;
-      try {
-        // Evaluate code to declare student function
-        // Note: Running strictly inside isolated Worker thread
-        const fn = new Function(code + '; return (typeof ' + e.data.fnName + ' !== "undefined") ? ' + e.data.fnName + ' : null;')();
-        
-        if (typeof fn !== 'function') {
-          self.postMessage({ error: 'Function "' + e.data.fnName + '" is not defined. Please check your function name.' });
-          return;
-        }
-
-        // Call student function with arguments
-        const result = fn.apply(null, input);
-        self.postMessage({ result: result });
-      } catch (err) {
-        self.postMessage({ error: err.message || String(err) });
-      }
-    };
-  `;
-
-  const blob = new Blob([workerScript], { type: 'application/javascript' });
-  return new Worker(URL.createObjectURL(blob));
+  if (typeof Worker === 'undefined') {
+    throw new Error('Your browser cannot run code tests. Try Chrome, Edge, Firefox, or Safari.');
+  }
+  return new Worker('js/runner-worker.js');
 }
 
 /**
@@ -70,7 +50,7 @@ function runSingleTest(code, fnName, input) {
     try {
       worker = createWorker();
     } catch (err) {
-      resolve({ error: 'Could not create Web Worker in this environment: ' + err.message });
+      resolve({ error: err.message || 'Your browser cannot run code tests. Try Chrome, Edge, Firefox, or Safari.' });
       return;
     }
 

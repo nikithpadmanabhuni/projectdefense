@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B0F17" />
+  <meta name="description" content="View your engineering readiness checklist, interview practice metrics, and diagnostic status on ProjectDefense." />
+  <!-- Content Security Policy: Tailwind CDN (requires unsafe-eval for client-side JIT compiler) + Self + GitHub API -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; img-src 'self' data:; worker-src 'self'; font-src 'self' data:; frame-ancestors 'none';" />
   <title>Dashboard | ProjectDefense</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -214,6 +221,42 @@
         </section>
 
       </div>
+
+      <!-- Device & Capability Diagnostics (Phase 5 Step 1) -->
+      <section class="bg-[#111827] border border-[#1F2937] rounded-xl overflow-hidden mt-6" aria-label="Device Compatibility and Diagnostics">
+        <details class="group p-5" id="device-check-details">
+          <summary class="flex items-center justify-between cursor-pointer list-none select-none">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <h2 class="text-sm font-semibold text-white">Device Check &amp; Diagnostics</h2>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Offline &amp; Storage</span>
+            </div>
+            <span class="text-xs text-blue-400 group-open:rotate-180 transition-transform">&darr;</span>
+          </summary>
+
+          <div class="mt-4 pt-4 border-t border-[#1F2937] space-y-3 text-xs">
+            <p class="text-slate-400 text-[11px]">
+              Summary of your browser capabilities for data saving, background workers, and network. Visible without console access for easy bug reporting screenshots.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs" id="device-check-list">
+              <!-- Rendered via js/dashboard.js -->
+            </div>
+
+            <div class="pt-3 flex flex-wrap items-center gap-3">
+              <button 
+                type="button" 
+                id="copy-diagnostics-btn" 
+                class="px-3.5 py-1.5 rounded-lg bg-[#1F2937] hover:bg-slate-700 text-slate-200 text-xs font-medium transition-smooth flex items-center gap-1.5 border border-slate-700"
+              >
+                <span>📋</span>
+                <span id="copy-diagnostics-text">Copy diagnostic info</span>
+              </button>
+              <span id="copy-diagnostics-status" class="text-[11px] text-emerald-400 hidden" aria-live="polite">Copied to clipboard!</span>
+            </div>
+          </div>
+        </details>
+      </section>
 
     </div>
 
