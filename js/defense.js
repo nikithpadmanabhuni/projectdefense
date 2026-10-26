@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * defense.js
  * Orchestrates the 4-step Project Defense oral exam flow:
  * Step 1: Import GitHub repository / Select file

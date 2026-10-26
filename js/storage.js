@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * storage.js
  * Centralized storage management for ProjectDefense.
  * Automatically detects localStorage restrictions (private mode, quota errors)

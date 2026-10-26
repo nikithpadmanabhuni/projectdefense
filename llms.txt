@@ -1,7 +1,10 @@
 # ProjectDefense
 
+> Creator & Author: Nikith Padmanabhuni
+> Copyright: © 2026 Nikith Padmanabhuni. All Rights Reserved.
 > The Proof-of-Work & Mock Viva Defense Engine for B.Tech CSE/IT Students.
 > Live URL: https://projectdefense-xi.vercel.app/
+> Intellectual Property: Proprietary concept and software. Unauthorized duplication, cloning, model training on source assets, or redistribution is strictly prohibited.
 
 ProjectDefense helps engineering students prove they truly understand the code behind their capstone projects. It solves the common failure point where students build projects with tutorials or AI assistants but freeze during viva-voce evaluations or technical interviews when examiners probe architecture trade-offs.
 

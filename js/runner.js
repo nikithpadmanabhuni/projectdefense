@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * runner.js
  * Executes student JavaScript solutions inside an isolated Web Worker with strict timeout.
  * Prevents main thread freeze on infinite loops and ensures safe output comparison.

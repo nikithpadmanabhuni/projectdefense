@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * coding.js
  * Controller for the No-AI Coding Practice environment.
  * Handles problem selection, Web Worker test running, timer countdown, strict mode, and attempt tracking.

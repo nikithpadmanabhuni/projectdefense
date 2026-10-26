@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * resume-rules.js
  * Rule-based resume bullet checker and rewriter.
  * Strictly adheres to rule: NEVER invent numbers, metrics, or technologies.

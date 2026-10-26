@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * runner-worker.js
  * Dedicated Web Worker script for executing untrusted student JavaScript solutions.
  * Loaded via `worker-src 'self'` without requiring blob: permissions.

@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * sprint.js
  * 30-Day Placement Sprint Plan & SQL Practice Engine.
  * Tracks daily tasks, streak calculation, weak-topic alerts, and self-checked SQL practice.

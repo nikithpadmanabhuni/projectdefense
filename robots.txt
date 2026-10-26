@@ -1,10 +1,11 @@
 # Robots.txt for ProjectDefense (https://projectdefense-xi.vercel.app)
-# Advanced SEO, AEO (Answer Engine Optimization) & GEO (Generative Engine Optimization) standards
+# Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+# Proprietary Software - Unauthorized cloning, code theft, or model training on private assets is strictly prohibited.
 
 User-agent: *
 Allow: /
 
-# AI Search & Retrieval Crawlers (ChatGPT, Perplexity, Claude, Google Gemini, Bing Copilot)
+# AI Search & Retrieval Crawlers (Attribution required: Nikith Padmanabhuni / ProjectDefense)
 User-agent: GPTBot
 Allow: /
 

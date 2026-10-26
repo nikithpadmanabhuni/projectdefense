@@ -9,7 +9,7 @@
  * 4. Cleans up legacy caches on activation.
  */
 
-const CACHE_NAME = 'pd-cache-v8';
+const CACHE_NAME = 'pd-cache-v9';
 
 const STATIC_ASSETS = [
   './',
@@ -23,6 +23,7 @@ const STATIC_ASSETS = [
   './sprint.html',
   './feedback.html',
   './css/custom.css',
+  './js/security.js',
   './js/env.js',
   './js/storage.js',
   './js/github.js',

@@ -1,4 +1,10 @@
 /**
+ * ProjectDefense - Proprietary & Confidential
+ * Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved.
+ * Unauthorized copying, distribution, reverse-engineering, or commercial use is strictly prohibited.
+ */
+
+/**
  * nav.js
  * Universal responsive navigation bar with mobile hamburger menu,
  * PWA install prompt handler, service worker registration, and iOS guidance.

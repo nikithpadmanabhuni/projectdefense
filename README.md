@@ -1,5 +1,9 @@
 # ProjectDefense
 
+> **Creator & Author**: Nikith Padmanabhuni
+> **Copyright**: © 2026 Nikith Padmanabhuni. All Rights Reserved.
+> **Intellectual Property**: Proprietary concept and software. Unauthorized duplication, cloning, or redistribution is strictly prohibited.
+>
 > "Know your project well enough to defend it."
 
 ProjectDefense is an honest, practical web application designed for 2nd–4th year B.Tech students (CSE/IT) to turn their technical projects into interview-ready stories and practice explaining their code under pressure.
@@ -159,3 +163,11 @@ ProjectDefense is pre-configured for instant zero-configuration deployment on Ve
    - Review weak-topic alerts and questions that felt unrealistic.
 4. **Prioritize Next Steps (Day 11+)**:
    - Fix the top 3 user-reported points before adding new features.
+
+---
+
+## Intellectual Property & License
+
+Copyright &copy; 2026 **Nikith Padmanabhuni**. All Rights Reserved.
+
+This application, its oral viva examination simulator, question prompts, rubric scoring heuristics, and source code are the exclusive proprietary property of Nikith Padmanabhuni. Unauthorized reproduction, modification, distribution, decompilation, framing, or commercial exploitation is strictly prohibited under applicable copyright and intellectual property laws. See [LICENSE](LICENSE) and [COPYRIGHT.md](COPYRIGHT.md) for full terms.

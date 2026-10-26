@@ -125,3 +125,53 @@ textarea:focus-visible {
 ::-webkit-scrollbar-thumb:hover {
   background: #374151;
 }
+
+/* =========================================================================
+   Anti-Theft & Intellectual Property Protection - Nikith Padmanabhuni
+   ========================================================================= */
+.pd-protected,
+.protected-content,
+[data-protected] {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Allow text selection strictly within interactive inputs and editors */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Prevent image dragging & touch callouts */
+img,
+svg {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/* Anti-Print Scraper Protection */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  body::before {
+    content: "PROTECTED CONTENT: Copyright (c) 2026 Nikith Padmanabhuni. All Rights Reserved. Printing or PDF extraction is prohibited." !important;
+    visibility: visible !important;
+    position: fixed !important;
+    top: 40% !important;
+    left: 10% !important;
+    right: 10% !important;
+    font-size: 18pt !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    color: #000000 !important;
+  }
+}
