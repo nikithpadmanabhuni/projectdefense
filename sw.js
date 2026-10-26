@@ -15,6 +15,7 @@ const STATIC_ASSETS = [
   './',
   './index.html',
   './onboarding.html',
+  './profile.html',
   './dashboard.html',
   './defense.html',
   './coding.html',
