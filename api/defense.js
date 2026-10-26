@@ -14,10 +14,24 @@ async function handler(req, res) {
 
   // Handle GET status check
   if (req.method === 'GET') {
-    const hasKey = Boolean(process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim() !== '');
+    // Check GROQ_API_KEY with trim and fallback to any casing/whitespace variant
+    let rawVal = process.env.GROQ_API_KEY;
+    if (!rawVal) {
+      for (const k of Object.keys(process.env)) {
+        if (k.trim().toUpperCase() === 'GROQ_API_KEY') {
+          rawVal = process.env[k];
+          break;
+        }
+      }
+    }
+    const hasKey = Boolean(rawVal && rawVal.trim() !== '');
+    const matchedEnvKeys = Object.keys(process.env).filter(k => k.toUpperCase().includes('GROQ'));
+
     return res.status(200).json({
       ok: true,
-      liveAvailable: hasKey
+      liveAvailable: hasKey,
+      hasGroqEnv: matchedEnvKeys.length > 0,
+      groqKeysFound: matchedEnvKeys
     });
   }
 
@@ -30,8 +44,16 @@ async function handler(req, res) {
     });
   }
 
-  // Check for Server-Side Environment Variable
-  const apiKey = process.env.GROQ_API_KEY;
+  // Check for Server-Side Environment Variable (with whitespace tolerance)
+  let apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    for (const k of Object.keys(process.env)) {
+      if (k.trim().toUpperCase() === 'GROQ_API_KEY') {
+        apiKey = process.env[k];
+        break;
+      }
+    }
+  }
   if (!apiKey || apiKey.trim() === '') {
     return res.status(503).json({
       error: 'NO_KEY',
